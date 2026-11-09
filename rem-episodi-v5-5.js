@@ -1,0 +1,40 @@
+(()=>{'use strict';
+const css=document.createElement('style');css.textContent=`
+/* Align the recommendation subtitles even when titles wrap to different line counts */
+#homeRecommendations .home-book, #homeRecommended .home-book, #remRecommendations .home-book{display:flex;flex-direction:column}
+#homeRecommendations .home-book > strong, #homeRecommended .home-book > strong, #remRecommendations .home-book > strong{min-height:2.8em}
+
+#rem53Modal{position:fixed;inset:0;z-index:2147483600;background:#06111de8;display:flex;align-items:center;justify-content:center;padding:14px}#rem53Modal[hidden]{display:none!important}
+#rem53Panel{background:#142b42;color:white;border:1px solid #56758c;border-radius:22px;width:min(480px,100%);max-height:88dvh;overflow:auto;padding:20px;font:16px system-ui}
+#rem53Panel h2{margin:8px 0}#rem53Panel p{font-size:14px;line-height:1.5;color:#bdcfdb}
+#rem53Panel button{cursor:pointer;font:inherit;border-radius:11px;padding:12px;background:#1d3b52;color:white;border:1px solid #63859a}
+#rem53Panel button.mint{background:#64dfa9;color:#102236;border:0;font-weight:800}
+#rem53Panel .options{display:flex;gap:9px;margin:18px 0}#rem53Panel .options button{flex:1;font-weight:500;background:#1d3b52;color:#fff;border:1px solid #63859a}#rem53Panel .options button:active{background:#64dfa9;color:#102236}#rem53Panel .season{font-size:12px;letter-spacing:2px;color:#64dfa9;margin:12px 0 4px}#rem53Panel .episode-card{border-top:1px solid #486078;padding:16px 0}#rem53Panel .episode-card h3{margin:0 0 6px;font-size:17px}#rem53Panel .episode-card p{margin:5px 0 12px}#rem53Panel .episode-card .ep-actions{display:flex;gap:7px;flex-wrap:wrap}#rem53Panel .episode-card .ep-actions button{padding:9px 12px;font-size:13px}#rem53Panel .episode-card .ep-num{float:left;margin-right:12px;border:1px solid #56758c;border-radius:10px;padding:10px;font-weight:700}
+#rem53Panel .ep{display:block;width:100%;text-align:left;margin:9px 0}
+#rem53Panel .ep small{display:block;color:#c2d3dd;line-height:1.5;margin-top:5px}
+#rem53Panel .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+`;document.head.append(css);
+const modal=document.createElement('div');modal.id='rem53Modal';modal.hidden=true;modal.innerHTML='<div id="rem53Panel" role="dialog" aria-modal="true"><div style="color:#64dfa9;font-size:12px;letter-spacing:1px">REM · LA TUA STORIA</div><h2 id="rem53Title"></h2><div id="rem53Content"></div><div class="actions"><button id="rem53Back">Indietro</button><button id="rem53Close">Chiudi</button></div></div>';document.body.append(modal);
+let book='',originalAction=null,stage='choice',episodes=[],currentIndex=0,showAll=false;
+const $=id=>document.getElementById(id);const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const key=()=> 'rem-reading-mode-53-'+book.toLowerCase().replace(/[^a-z0-9]/g,'');
+function titleFor(el){const card=el.closest('.home-book,article,.book-card,.card')||el.parentElement?.parentElement;const text=card?.textContent||'';return /montecristo/i.test(text)?'Il conte di Montecristo':/casa oltre il bosco/i.test(text)?'La casa oltre il bosco':(card?.querySelector('h3,strong')?.textContent||'Il tuo libro').trim()}
+function showChoice(t,action){book=t;originalAction=action;stage='choice';modal.hidden=false;render()}
+function openBook(){modal.hidden=true;const action=originalAction;originalAction=null;if(action){window.__rem53Bypass=true;try{action()}finally{window.__rem53Bypass=false}}}
+const catalogue={'Il conte di Montecristo':[{title:'L’arrivo del Faraone',intro:'Una nave rientra a Marsiglia. A bordo, un giovane marinaio attira subito l’attenzione.'},{title:'Il giovane Edmond Dantès',intro:'Tra notizie dal viaggio e nuove responsabilità, Edmond guarda al proprio futuro.'},{title:'Le prime ombre',intro:'Sotto l’apparente serenità del ritorno affiorano rivalità e tensioni.'}],'La casa oltre il bosco':[{title:'L’inizio del viaggio',intro:'La storia comincia: scopri le prime pagine e lasciati guidare nel racconto.'}]};
+function showEpisodes(){stage='episodes';episodes=catalogue[book]||[];modal.hidden=false;render()}
+function startEpisode(i,format){currentIndex=i;try{localStorage.setItem(key()+'-episode',String(i))}catch(e){}openBook();setTimeout(()=>{if(format==='audio'||format==='cartaceo'){const b=[...document.querySelectorAll('button')].find(x=>new RegExp('^'+(format==='audio'?'audio':'cartaceo')+'$','i').test(x.textContent.trim()));if(b)b.click()}},300)}
+function render(){
+$('rem53Title').textContent=book;const body=$('rem53Content');$('rem53Back').hidden=stage==='choice';
+if(stage==='choice'){body.innerHTML='<p>Come vuoi vivere questa storia?</p><div class="options"><button id="rem53Full">Libro completo</button><button id="rem53Eps">A episodi</button></div><p>Potrai cambiare modalità in seguito senza perdere la tua lettura.</p>';$('rem53Full').onclick=()=>{try{localStorage.setItem(key(),'full')}catch(e){}openBook()};$('rem53Eps').onclick=()=>{try{localStorage.setItem(key(),'episodes')}catch(e){}showEpisodes()};return}
+const monte=/montecristo/i.test(book);body.innerHTML='<div class="season">STAGIONE 1</div><p><strong>'+episodes.length+' '+(episodes.length===1?'episodio':'episodi')+' disponibili in questa anteprima</strong></p><p>'+(monte?'Il capitolo iniziale di Alexandre Dumas, presentato in brevi tappe narrative.':'Un primo episodio dimostrativo per esplorare la lettura a puntate.')+'</p><div id="rem53List"></div><p style="font-size:12px">Anteprime editoriali: la suddivisione precisa del testo e dell’audio sarà completata in una prossima iterazione.</p>';
+$('rem53List').innerHTML=episodes.map((ep,i)=>'<div class="episode-card"><span class="ep-num">'+(i+1)+'</span><h3>'+esc(ep.title)+'</h3><p>'+esc(ep.intro)+'</p><div class="ep-actions"><button data-index="'+i+'" data-format="ebook">Ebook</button><button data-index="'+i+'" data-format="audio">Audiolibro</button><button data-index="'+i+'" data-format="cartaceo">Cartaceo</button></div></div>').join('');
+$('rem53List').querySelectorAll('[data-index]').forEach(b=>b.onclick=()=>startEpisode(Number(b.dataset.index),b.dataset.format));
+}
+$('rem53Close').onclick=()=>modal.hidden=true;$('rem53Back').onclick=()=>{stage='choice';render()};
+function alignRecommendationCards(){const heading=[...document.querySelectorAll('h1,h2,h3,h4')].find(x=>/scelti per te/i.test(x.textContent));if(!heading)return;let section=heading.parentElement;for(let i=0;i<4&&section;i++,section=section.parentElement){const buttons=[...section.querySelectorAll('button')].filter(b=>/scopri il libro/i.test(b.textContent));if(buttons.length<2)continue;const titles=buttons.map(b=>{let p=b.parentElement;for(let j=0;j<5&&p;j++,p=p.parentElement){const t=[...p.querySelectorAll('strong,h3,h4')].find(x=>/montecristo|casa oltre il bosco/i.test(x.textContent));if(t)return t}return null}).filter(Boolean);if(titles.length<2)return;const max=Math.max(...titles.map(t=>t.getBoundingClientRect().height));titles.forEach(t=>{t.style.minHeight=Math.ceil(max)+'px';t.style.display='block'});return}}
+function softenEditAnswers(){[...document.querySelectorAll('button,a')].filter(x=>/modifica risposte/i.test(x.textContent.trim())).forEach(x=>{x.style.fontSize='12px';x.style.fontWeight='500';x.style.color='#9baab9';x.style.borderColor='#526375';x.style.padding='6px 10px';x.style.opacity='.75'})}
+setTimeout(softenEditAnswers,1100);setTimeout(softenEditAnswers,3000);
+setTimeout(alignRecommendationCards,1000);setTimeout(alignRecommendationCards,2500);
+document.addEventListener('click',e=>{if(window.__rem53Bypass||!modal.hidden)return;const btn=e.target.closest('button,a');if(!btn||btn.closest('#rem53Modal'))return;const label=(btn.textContent||'').trim();if(!/scopri il libro|nuova lettura|inizia a leggere/i.test(label))return;const t=titleFor(btn);if(!/montecristo|casa oltre il bosco/i.test(t))return;e.preventDefault();e.stopImmediatePropagation();showChoice(t,()=>btn.click())},true);
+})();
