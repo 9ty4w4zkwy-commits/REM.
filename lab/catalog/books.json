@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "books": [
+    {
+      "id": "casa",
+      "title": "La casa oltre il bosco",
+      "author": null,
+      "status": "legacy",
+      "formats": [
+        "ebook",
+        "audio"
+      ],
+      "chaptersSource": "legacy-embedded"
+    },
+    {
+      "id": "montecristo",
+      "title": "Il conte di Montecristo",
+      "author": "Alexandre Dumas",
+      "status": "chapter-1",
+      "formats": [
+        "ebook",
+        "audio"
+      ],
+      "chaptersSource": "legacy-embedded"
+    }
+  ]
+}
