@@ -19,7 +19,7 @@ try{
  html=html.replace('</body>',startFn+'<script src="./lab/modules/cover.js"><\/script><script src="./lab/modules/focus-timer.js"><\/script></body>');
  if(html===original)throw Error('Nessuna correzione applicata');
  document.open();document.write(html);document.close();
- const epScript=document.createElement('script');epScript.src='./rem-episodi-v5-6.js?v=1';epScript.onerror=()=>console.error('REM episodi: script non caricato');document.body.appendChild(epScript);
+ for(const src of ['./lab/modules/catalog.js','./lab/modules/episodes.js']){const script=document.createElement('script');script.src=src;script.async=false;script.onerror=()=>console.error('REM laboratorio: modulo non caricato',src);document.body.appendChild(script);}
 }catch(e){document.getElementById('status').textContent='Impossibile avviare il test: '+e.message;}
 })();
 </script></body></html>
