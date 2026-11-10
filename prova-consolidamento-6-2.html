@@ -24,6 +24,32 @@ const fixCover=()=>{
  }
 };
 fixCover();
+
+/* REM 6.2 — remove residual Casa cards from every rendered section, including saved progress. */
+const removeCasaCards=()=>{
+  const exact=/la casa oltre il bosco/i;
+  const containers=['#libraryGrid','#homeNew','#homeFree','#remPicksRail','#switchContinueRail','#homeRecommendations','#homeRecommended','#remRecommendations'];
+  for(const selector of containers){
+    const rail=document.querySelector(selector);if(!rail)continue;
+    for(const item of [...rail.children]){
+      if(exact.test(item.textContent||'')||exact.test(item.getAttribute('aria-label')||''))item.remove();
+    }
+  }
+  for(const node of [...document.querySelectorAll('.home-book,.rem-pick,.book-card,.book-tile,.library-tile,article')]){
+    if(exact.test(node.textContent||'')&& !/il conte di montecristo/i.test(node.textContent||''))node.remove();
+  }
+  // Remove stale reading progress for the retired title, preserving Montecristo and onboarding.
+  try{
+    for(let i=localStorage.length-1;i>=0;i--){
+      const key=localStorage.key(i);
+      if(key&&/casa(?:-|_|\\s)*oltre(?:-|_|\\s)*il(?:-|_|\\s)*bosco/i.test(key))localStorage.removeItem(key);
+    }
+  }catch(e){}
+};
+removeCasaCards();
+let remCasaScheduled=false;
+new MutationObserver(()=>{if(remCasaScheduled)return;remCasaScheduled=true;requestAnimationFrame(()=>{remCasaScheduled=false;removeCasaCards()})}).observe(document.body,{childList:true,subtree:true});
+
 let coverTries=0;const coverInterval=setInterval(()=>{fixCover();if(++coverTries>=30)clearInterval(coverInterval)},350);
 
 }catch(e){document.getElementById('status').textContent='Errore nel consolidamento: '+e.message}})();
