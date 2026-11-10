@@ -1,9 +1,28 @@
-# REM laboratorio
+# REM Laboratorio — registro tecnico
 
-Base: REM 5.6 con due libri. La versione ufficiale rimane invariata.
+## Obiettivo
+Preparare la versione REM 5.6 approvata (due libri, onboarding, Focus Mode, lettura, audio, valutazioni) a iterazioni frequenti senza patch cumulative.
 
-Moduli estratti: `modules/focus-timer.js` (Focus), `modules/cover.js` (copertina).
+## Stato attuale (parziale)
+- `rem-laboratorio.html`: pagina di prova separata dall'ufficiale.
+- `lab/modules/focus-timer.js`: timer Focus estratto dal caricatore storico.
+- `lab/modules/cover.js`: logica della copertina estratta.
+- `lab/styles/legacy-overrides.css`: CSS del caricatore estratto.
+- `lab/catalog/books.json`: inventario metadati dei due titoli; **non è ancora il catalogo attivo**.
+- `rem-episodi-v5-6.js`: logica episodi legacy ancora condivisa.
 
-**Lavoro ancora necessario:** catalogo, capitoli, onboarding, lettore e rating sono tuttora nel file storico. Il caricatore contiene ancora alcune sostituzioni di testo. Non considerare completata la modularizzazione.
+## Debito tecnico ancora aperto
+1. Il file `REM_Iterazione3_Focus_Mode.html` (circa 26 MB) contiene ancora dati e logica di libri, capitoli, audio, onboarding, lettura e stato. **Non è stato riscritto**.
+2. Il caricatore usa ancora sostituzioni testuali per apertura ebook e rating; eliminarle richiede un refactoring della sorgente.
+3. Il catalogo JSON è una specifica preliminare, non ancora collegata alla UI; eliminarvi un libro oggi non lo rimuove dall'app.
+4. Manca la verifica end-to-end su Safari iPhone e il confronto visivo con la versione ufficiale.
 
-Verificare il laboratorio su Safari iPhone prima di qualsiasi promozione. Non modificare `index.html` senza approvazione.
+## Regole di rilascio
+- Non modificare `index.html` o `rem-recupero-due-libri-focus.html` durante il lavoro in laboratorio.
+- Non eliminare Casa finché il catalogo non governa realmente la UI.
+- Una funzione per modulo; modifiche piccole, verificabili e reversibili.
+- Test di regressione: onboarding 4 domande, due libri, Biblioteca, ebook, audio/episodi, stelline, timer Focus (5/10/personalizzato, pausa, riprendi, termina), progressi.
+- Promozione in ufficiale solo dopo test e approvazione esplicita.
+
+## Controlli effettuati
+Sintassi JavaScript del caricatore e dei moduli, validità JSON e presenza dei riferimenti ai file CSS/JS. Nessun test browser iPhone completato.
