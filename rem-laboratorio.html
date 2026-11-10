@@ -5,24 +5,7 @@ try{
  if(!response.ok)throw Error('File base non disponibile ('+response.status+')');
  let html=await response.text();
  const original=html;
- html=html.replace('</head>',`<style>
- #homeFree .home-book > img{width:100%!important;height:245px!important;object-fit:contain!important;object-position:center!important;padding:10px!important;box-sizing:border-box!important;background:#102b44!important}
- #homeFree .home-book{overflow:visible!important}
- #homeFree .home-book > strong{overflow-wrap:anywhere}
- .rem-rate-backdrop{z-index:2147483647!important;pointer-events:auto!important}
- .rem-rate-dialog,.rem-rate-stars,.rem-rate-stars button{pointer-events:auto!important}
- .rem-rate-stars button{min-width:43px;min-height:54px;touch-action:manipulation}
- .rem-rate-stars button[aria-pressed="true"]{color:#64DFA9!important}
- @media(max-width:420px){#homeFree .home-book > img{height:220px!important;padding:9px!important}}
- #homeFree .home-book > img{display:block!important;width:calc(100% - 20px)!important;height:245px!important;max-height:245px!important;min-height:245px!important;margin:10px auto 14px!important;padding:0!important;object-fit:contain!important;object-position:center!important;border-radius:16px!important;overflow:hidden!important;background:transparent!important;box-shadow:none!important}
- #homeFree .home-book{display:flex!important;flex-direction:column!important;align-items:stretch!important}
- #homeFree .home-book > strong{margin-top:0!important}
- #homeFree .home-book > img{width:auto!important;max-width:calc(100% - 20px)!important;height:auto!important;max-height:245px!important;min-height:0!important;aspect-ratio:auto!important;align-self:center!important;object-fit:contain!important;border-radius:16px!important}
- #homeFree .home-book{justify-content:flex-start!important}
- @media(max-width:420px){#homeFree .home-book > img{max-height:220px!important;height:auto!important;min-height:0!important}}
-
- @media(max-width:420px){#homeFree .home-book > img{height:220px!important;max-height:220px!important;min-height:220px!important}}
- .rem-rating-submit{border:0;border-radius:12px;background:#64DFA9;color:#102135;font-weight:750;padding:13px 22px;margin:12px 8px 0 0;cursor:pointer} #homeFree img{border-radius:12px!important} </style></head>`);
+ html=html.replace('</head>','<link rel="stylesheet" href="./lab/styles/legacy-overrides.css"></head>');
  const oldOpen="window.REMCatalogo?.apri(id,'ebook')};card.append";
  const newOpen="window.REMCatalogo?.apri(id,'ebook');window.REM_OPEN_FROM_START?.()};card.append";
  if(!html.includes(oldOpen))throw Error('Pulsante Scopri il libro non trovato');
