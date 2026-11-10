@@ -1,4 +1,4 @@
-n(function(){
+(function(){
 const css=document.createElement('style');css.textContent=`
 .rem-session-btn{border:1px solid #64DFA9!important;color:#64DFA9!important;background:#163044!important;border-radius:12px!important;padding:10px 15px!important;font-weight:750!important;cursor:pointer}
 .rem-session-btn[aria-pressed=true]{background:#64DFA9!important;color:#102236!important}
