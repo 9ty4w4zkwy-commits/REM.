@@ -9,12 +9,13 @@ Preparare la versione REM 5.6 approvata (due libri, onboarding, Focus Mode, lett
 - `lab/modules/cover.js`: logica della copertina estratta.
 - `lab/styles/legacy-overrides.css`: CSS del caricatore estratto.
 - `lab/catalog/books.json`: inventario metadati dei due titoli; **non è ancora il catalogo attivo**.
-- `rem-episodi-v5-6.js`: logica episodi legacy ancora condivisa.
+- `lab/modules/episodes.js`: copia indipendente della logica episodi legacy (non ancora rifattorizzata internamente).
+- `lab/modules/catalog.js`: carica e valida `books.json` ed espone `window.REMLabCatalog`; **la UI legacy non lo usa ancora per mostrare i libri**.
 
 ## Debito tecnico ancora aperto
 1. Il file `REM_Iterazione3_Focus_Mode.html` (circa 26 MB) contiene ancora dati e logica di libri, capitoli, audio, onboarding, lettura e stato. **Non è stato riscritto**.
 2. Il caricatore usa ancora sostituzioni testuali per apertura ebook e rating; eliminarle richiede un refactoring della sorgente.
-3. Il catalogo JSON è una specifica preliminare, non ancora collegata alla UI; eliminarvi un libro oggi non lo rimuove dall'app.
+3. Il catalogo JSON è caricato da un modulo indipendente, ma non governa ancora la UI; eliminarvi un libro oggi non lo rimuove dall'app.
 4. Manca la verifica end-to-end su Safari iPhone e il confronto visivo con la versione ufficiale.
 
 ## Regole di rilascio
