@@ -35,6 +35,7 @@ flatCoverStyle.textContent=`
 #remPicksRail .rem-pick::before, #remPicksRail .rem-pick::after {display:none!important}
 `;
 document.head.appendChild(flatCoverStyle);
+/* Re-published 6.3 cover styling */
 let coverTries=0;const coverInterval=setInterval(()=>{fixCover();if(++coverTries>=30)clearInterval(coverInterval)},350);
 
 }catch(e){document.getElementById('status').textContent='Errore nel consolidamento: '+e.message}})();
