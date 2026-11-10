@@ -27,3 +27,6 @@ Preparare la versione REM 5.6 approvata (due libri, onboarding, Focus Mode, lett
 
 ## Controlli effettuati
 Sintassi JavaScript del caricatore e dei moduli, validità JSON e presenza dei riferimenti ai file CSS/JS. Nessun test browser iPhone completato.
+
+## Correzione riscontrata nel laboratorio
+Il file episodi legacy conteneva una parentesi graffa di chiusura in eccesso in `updateHomeMode`; corretta **solo** in `lab/modules/episodes.js`. La sintassi ora è valida. Il file ufficiale `rem-episodi-v5-6.js` è rimasto intatto.
