@@ -72,3 +72,14 @@ body.immersive-reading #reader .reader-tools{position:sticky;top:0;z-index:5;jus
 body.immersive-reading #reader .reading-surface{margin-top:0}
 body.immersive-reading #reader .reader-notes{display:none}
 body.immersive-reading main{max-width:820px}
+
+/* Candidate book detail: separate discovery from reading. */
+#bookDetail>button{margin-bottom:12px}
+.detail-hero{padding:clamp(22px,5vw,42px);background:linear-gradient(145deg,#26384d,#172b40 70%);border:1px solid #ffffff22}
+.detail-hero h2{font-family:Georgia,serif;font-size:clamp(2rem,7vw,3.5rem);font-weight:500;line-height:1.13;max-width:17ch;margin:10px 0}
+.detail-formats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:26px 0}
+.detail-formats>div{border:1px solid #ffffff30;border-radius:12px;padding:13px 10px;display:flex;flex-direction:column;gap:7px}
+.detail-formats>div:first-child{border-color:var(--accent)}
+.detail-formats strong{font-size:.9rem}
+.detail-formats span{font-size:.75rem;color:var(--muted);line-height:1.4}
+@media(max-width:480px){.detail-formats{grid-template-columns:1fr}.detail-formats>div{flex-direction:row;align-items:center;justify-content:space-between}.detail-formats span{text-align:right}}
