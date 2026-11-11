@@ -19,6 +19,7 @@ jobs:
         run: |
           node lab/tests/validate-catalog.mjs
           node lab/tests/validate-ui.mjs
+          node lab/tests/validate-extracted-content.mjs
       - name: Check JavaScript syntax
         run: |
           node --check lab/modules/app-core.js
