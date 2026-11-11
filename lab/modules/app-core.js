@@ -33,7 +33,7 @@ for(const book of state.books){
   }
   state.chapters=state.chapters.filter(ch=>ch.bookId!==book.id);
   for(const [number,segments] of grouped){
-   state.chapters.push({id:book.id+'-legacy-'+number,bookId:book.id,title:'Capitolo '+number,text:segments.map(segment=>segment.text||segment.testo||'').join('\\n\\n'),source:'Testo estratto dalla versione REM originale'});
+   state.chapters.push({id:book.id+'-legacy-'+number,bookId:book.id,title:segments[0].chapterTitle||'Capitolo '+number,text:segments.map(segment=>segment.text||segment.testo||'').join('\\n\\n'),source:'Testo estratto dalla versione REM originale'});
   }
  }catch(error){console.warn('Contenuto estratto non caricato:',book.id,error)}
 }
