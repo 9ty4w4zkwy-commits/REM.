@@ -45,5 +45,7 @@ function draw(){
 function open(done){onDone=typeof done==='function'?done:()=>{};page=-1;$('profileOnboarding').classList.remove('hidden');draw()}
 $('profileSkip').onclick=()=>close('skipped');
 $('profileEdit').onclick=()=>open(()=>{});
-window.REMProfile={open,hasFinished:()=>{let x={};try{x=JSON.parse(localStorage.getItem(KEY)||'{}')}catch{}return x.status==='completed'||x.status==='skipped'},answers:()=>answers};
+const hasFinished=()=>{let x={};try{x=JSON.parse(localStorage.getItem(KEY)||'{}')}catch{}return x.status==='completed'||x.status==='skipped'};
+if(hasFinished())$('profileEdit').classList.remove('hidden');
+window.REMProfile={open,hasFinished,answers:()=>answers};
 })();
