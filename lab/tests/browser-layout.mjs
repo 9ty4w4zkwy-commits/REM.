@@ -21,6 +21,17 @@ try{
    assert.ok(box.x>=-2&&box.x+box.width<=width+2,`${width}px ${screen}: primary action clipped`);
   }
   await inspect('onboarding','#profileSkip');
+  await page.getByRole('button',{name:'Iniziamo'}).click();
+  for(let question=1;question<=4;question++){
+   await inspect('onboarding question '+question,'#profileSkip');
+   const options=page.locator('.profile-choice');
+   assert.ok(await options.count()>=4,`${width}px question ${question}: answer choices missing`);
+   await options.first().click();
+   const next=page.locator('.profile-actions .primary');
+   assert.ok(await next.isEnabled(),`${width}px question ${question}: next disabled after answer`);
+   await inspect('onboarding question '+question+' next','.profile-actions .primary');
+   if(question<4)await next.click();
+  }
   await page.locator('#profileSkip').click();
   await inspect('home','#homeExplore');
   await page.locator('#homeLibrary').click();
@@ -31,6 +42,6 @@ try{
   await inspect('reader','#goLibrary');
   assert.deepEqual(errors,[],`${width}px: browser errors`);
   await page.close();
-  console.log(`Candidate mobile layout verified: ${width}px, five screens`);
+  console.log(`Candidate mobile layout verified: ${width}px, five screens plus all four onboarding questions`);
  }
 }finally{await browser.close()}
