@@ -13,6 +13,12 @@ try {
  assert.ok((await page.locator('#chapterText').innerText()).length>1000,'Casa text should be loaded');
  const casaChapters=await page.locator('#chapter option').count();
  assert.ok(casaChapters>=2,'Casa should expose its original chapters');
+ assert.equal(await page.locator('#previousChapter').isDisabled(),true,'First chapter has no previous');
+ await page.locator('#nextChapter').click();
+ assert.equal(await page.locator('#chapter').evaluate(el=>el.selectedIndex),1,'Next chapter button works');
+ assert.equal(await page.locator('#nextChapter').isDisabled(),true,'Last chapter has no next');
+ await page.locator('#previousChapter').click();
+ assert.equal(await page.locator('#chapter').evaluate(el=>el.selectedIndex),0,'Previous chapter button works');
  await page.locator('#chapter').selectOption({index:1});
  const chosen=await page.locator('#chapter').inputValue();
  await page.reload({waitUntil:'networkidle'});
