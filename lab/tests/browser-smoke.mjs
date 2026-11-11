@@ -9,7 +9,17 @@ try {
  await page.getByRole('button',{name:'Apri libro'}).first().waitFor();
  const buttons=page.getByRole('button',{name:'Apri libro'});
  assert.equal(await buttons.count(),2,'Both extracted books should be available');
- await buttons.last().click();
+ await buttons.first().click();
+ assert.ok((await page.locator('#chapterText').innerText()).length>1000,'Casa text should be loaded');
+ const casaChapters=await page.locator('#chapter option').count();
+ assert.ok(casaChapters>=2,'Casa should expose its original chapters');
+ await page.locator('#chapter').selectOption({index:1});
+ const chosen=await page.locator('#chapter').inputValue();
+ await page.reload({waitUntil:'networkidle'});
+ await page.getByRole('button',{name:'Apri libro'}).first().click();
+ assert.equal(await page.locator('#chapter').inputValue(),chosen,'Chapter progress should survive reload');
+ await page.locator('#goLibrary').click();
+ await page.getByRole('button',{name:'Apri libro'}).last().click();
  await page.locator('#chapterText').waitFor();
  assert.ok((await page.locator('#chapterText').innerText()).length>1000,'Montecristo text should be loaded');
  await page.locator('#minutes').selectOption('5');
