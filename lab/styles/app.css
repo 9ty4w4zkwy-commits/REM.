@@ -49,3 +49,13 @@ html[data-reading-theme="sepia"] .reading-surface .status{color:#6b5845}
 .reader-notes{border-top:1px solid #7776;margin-top:26px;padding-top:14px}
 #readingNote{width:100%;min-height:110px;resize:vertical;border:1px solid #7779;border-radius:10px;background:transparent;color:inherit;padding:12px;font:inherit;line-height:1.5}
 #readingNote:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+/* Catalog-driven cover art, designed in CSS without heavy image payloads. */
+#books .book{gap:9px}
+.book-cover{width:100%;aspect-ratio:4/3;min-height:165px;border-radius:12px;padding:20px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;background:radial-gradient(ellipse at 75% 18%,#6c798b 0,transparent 46%),linear-gradient(145deg,#293b54,#121d31);color:#fff4e4;box-shadow:inset 0 0 0 1px #ffffff25}
+.book-cover[data-cover-style="forest"]{background:radial-gradient(ellipse at 70% 25%,#8b9e84 0,transparent 46%),linear-gradient(155deg,#355548,#162b2b 80%)}
+.book-cover[data-cover-style="classic"]{background:radial-gradient(ellipse at 85% 10%,#a98b5e 0,transparent 48%),linear-gradient(145deg,#4b3541,#1e2535 85%)}
+.book-cover-label{font-size:.63rem;letter-spacing:.19em;font-weight:750;opacity:.86}
+.book-cover strong{font-family:Georgia,serif;font-size:clamp(1.55rem,5vw,2.15rem);font-weight:500;line-height:1.12;max-width:15ch;text-wrap:balance}
+.book-cover-author{font-size:.78rem;opacity:.88}
+@media(min-width:700px){.book-cover{aspect-ratio:4/4.3}}
