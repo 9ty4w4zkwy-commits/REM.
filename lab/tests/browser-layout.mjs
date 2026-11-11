@@ -11,7 +11,7 @@ try{
   async function inspect(screen,selector){
    const metrics=await page.evaluate(()=>{
     const d=document.documentElement;
-    return {viewport:d.clientWidth,content:d.scrollWidth};
+    return {viewport:d.clientWidth,content:d.scrollWidth,overflowing:[...document.querySelectorAll('body *')].filter(el=>{const b=el.getBoundingClientRect();return b.width>0&&(b.right>d.clientWidth+2||b.left< -2)}).slice(0,8).map(el=>({tag:el.tagName,id:el.id,cls:String(el.className).slice(0,60),right:Math.round(el.getBoundingClientRect().right)}))};
    });
    assert.ok(metrics.content<=metrics.viewport+2,`${width}px ${screen}: horizontal overflow ${JSON.stringify(metrics)}`);
    const button=page.locator(selector);
