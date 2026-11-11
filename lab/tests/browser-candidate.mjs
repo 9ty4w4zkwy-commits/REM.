@@ -11,6 +11,10 @@ try{
  assert.match(await page.locator('#books').innerText(),/Montecristo/);
  assert.doesNotMatch(await page.locator('#books').innerText(),/casa oltre il bosco/i);
  await page.getByRole('button',{name:'Apri libro'}).click();
+ assert.equal(await page.locator('#bookDetail').isVisible(),true,'Candidate must open book detail before reader');
+ assert.match(await page.locator('#detailTitle').innerText(),/Montecristo/);
+ assert.match(await page.locator('.detail-formats').innerText(),/Non ancora disponibile/);
+ await page.locator('#detailRead').click();
  assert.equal(await page.locator('#format option[value="audio"]').isDisabled(),true,'Unavailable audio must be disabled');
  assert.equal(await page.locator('#format option[value="paper"]').isDisabled(),true,'Unavailable paper synchronization must be disabled');
  assert.ok((await page.locator('#chapterText').innerText()).length>1000,'Full original Montecristo text must load');
