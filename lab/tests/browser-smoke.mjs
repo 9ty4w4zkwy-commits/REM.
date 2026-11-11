@@ -27,12 +27,17 @@ try {
  assert.equal(await page.locator('#nextChapter').isDisabled(),true,'Last chapter has no next');
  await page.locator('#previousChapter').click();
  assert.equal(await page.locator('#chapter').evaluate(el=>el.selectedIndex),0,'Previous chapter button works');
+ await page.locator('#readingNote').fill('Una nota sul primo capitolo');
  await page.locator('#chapter').selectOption({index:1});
+ assert.equal(await page.locator('#readingNote').inputValue(),'','Notes must be scoped to chapter');
  const chosen=await page.locator('#chapter').inputValue();
  await page.reload({waitUntil:'networkidle'});
  assert.equal(await page.locator('#welcome').isVisible(),false,'Welcome should not repeat after completion');
  await page.getByRole('button',{name:'Apri libro'}).first().click();
  assert.equal(await page.locator('#chapter').inputValue(),chosen,'Chapter progress should survive reload');
+ await page.locator('#previousChapter').click();
+ assert.equal(await page.locator('#readingNote').inputValue(),'Una nota sul primo capitolo','Personal note should survive reload');
+ await page.locator('#nextChapter').click();
  await page.locator('#goLibrary').click();
  assert.match(await page.locator('#historySummary').innerText(),/1 libro iniziato/);
  assert.equal(await page.locator('#resetReading').isDisabled(),false);
