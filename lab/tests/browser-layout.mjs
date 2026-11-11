@@ -1,0 +1,36 @@
+import { chromium } from 'playwright';
+import assert from 'node:assert/strict';
+
+const browser=await chromium.launch({headless:true,channel:'chrome'});
+try{
+ for(const width of [320,375,390,430]){
+  const page=await browser.newPage({viewport:{width,height:844},deviceScaleFactor:1,isMobile:true,hasTouch:true});
+  const errors=[];
+  page.on('pageerror',e=>errors.push(e.message));
+  await page.goto('http://127.0.0.1:8765/rem-candidata.html',{waitUntil:'networkidle'});
+  async function inspect(screen,selector){
+   const metrics=await page.evaluate(()=>{
+    const d=document.documentElement;
+    return {viewport:d.clientWidth,content:d.scrollWidth};
+   });
+   assert.ok(metrics.content<=metrics.viewport+2,`${width}px ${screen}: horizontal overflow ${JSON.stringify(metrics)}`);
+   const button=page.locator(selector);
+   await button.waitFor({state:'visible'});
+   const box=await button.boundingBox();
+   assert.ok(box&&box.width>=44&&box.height>=44,`${width}px ${screen}: primary action below 44px touch target`);
+   assert.ok(box.x>=-2&&box.x+box.width<=width+2,`${width}px ${screen}: primary action clipped`);
+  }
+  await inspect('onboarding','#profileSkip');
+  await page.locator('#profileSkip').click();
+  await inspect('home','#homeExplore');
+  await page.locator('#homeLibrary').click();
+  await inspect('library','#libraryHome');
+  await page.getByRole('button',{name:'Apri libro'}).first().click();
+  await inspect('book detail','#detailRead');
+  await page.locator('#detailRead').click();
+  await inspect('reader','#goLibrary');
+  assert.deepEqual(errors,[],`${width}px: browser errors`);
+  await page.close();
+  console.log(`Candidate mobile layout verified: ${width}px, five screens`);
+ }
+}finally{await browser.close()}
