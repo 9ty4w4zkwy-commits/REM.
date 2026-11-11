@@ -1,0 +1,26 @@
+name: REM Lab checks
+on:
+  push:
+    branches: [rem-lab-modularizzazione-v1]
+  pull_request:
+    paths:
+      - 'lab/**'
+      - 'rem-modulare-demo.html'
+      - '.github/workflows/rem-lab-checks.yml'
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate catalog
+        run: node lab/tests/validate-catalog.mjs
+      - name: Check JavaScript syntax
+        run: |
+          node --check lab/modules/app-core.js
+          node --check lab/modules/catalog.js
+          node --check lab/modules/episodes.js
+          node --check lab/modules/focus-timer.js
+          node --check lab/modules/cover.js
