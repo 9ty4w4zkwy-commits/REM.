@@ -55,6 +55,8 @@ jobs:
           for i in $(seq 1 30); do if curl -fsS http://127.0.0.1:8767/rem-candidata.html >/dev/null; then break; fi; sleep 1; done
           REM_BASE_URL=http://127.0.0.1:8767 node lab/tests/browser-candidate.mjs
           REM_SINGLE_FILE_URL=file://$PWD/lab/dist/rem-candidate-single/rem-candidata.html node lab/tests/browser-candidate.mjs
+          REM_BROWSER=webkit REM_BASE_URL=http://127.0.0.1:8767 node lab/tests/browser-candidate.mjs
+          REM_BROWSER=webkit REM_SINGLE_FILE_URL=file://$PWD/lab/dist/rem-candidate-single/rem-candidata.html node lab/tests/browser-candidate.mjs
       - name: Upload verified single-file candidate
         uses: actions/upload-artifact@v4
         with:
