@@ -9,7 +9,7 @@ try {
  await page.locator('#welcomeTheme').selectOption('sepia');
  await page.locator('#welcomeStart').click();
  assert.equal(await page.locator('html').getAttribute('data-reading-theme'),'sepia','Onboarding theme should apply');
- await page.getByRole('button',{name:'Apri libro'}).first().waitFor();
+ await page.getByRole('button',{name:'Apri libro'}).first().waitFor({timeout:12000});
  const buttons=page.getByRole('button',{name:'Apri libro'});
  assert.equal(await buttons.count(),2,'Both extracted books should be available');
  assert.equal(await page.locator('.book-cover').count(),2,'Every catalog book should render a cover');
