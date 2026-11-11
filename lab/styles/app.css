@@ -45,3 +45,7 @@ html[data-reading-theme="sepia"] .reading-surface .status{color:#6b5845}
 
 #historyBooks{display:grid;gap:10px;margin:12px 0}
 .history-resume{display:block;width:100%;text-align:left;background:var(--surface2);border-color:#ffffff40}
+
+.reader-notes{border-top:1px solid #7776;margin-top:26px;padding-top:14px}
+#readingNote{width:100%;min-height:110px;resize:vertical;border:1px solid #7779;border-radius:10px;background:transparent;color:inherit;padding:12px;font:inherit;line-height:1.5}
+#readingNote:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
