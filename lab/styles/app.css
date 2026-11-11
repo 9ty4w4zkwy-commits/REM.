@@ -147,3 +147,9 @@ html[data-catalog="candidate"] #library>h2{font-size:clamp(2rem,8vw,3.4rem);max-
 html[data-catalog="candidate"] #library>#books .book{background:#14263a;border-radius:20px}
 html[data-catalog="candidate"] #bookDetail .detail-hero{border-radius:22px;background:radial-gradient(ellipse at 100% 0%,#3c4b52,transparent 48%),linear-gradient(140deg,#26384b,#142438)}
 @media(max-width:480px){html[data-catalog="candidate"] header,html[data-catalog="candidate"] main{padding-left:20px;padding-right:20px}html[data-catalog="candidate"] #home .home-spotlight{padding:25px 22px}}
+
+/* Narrow iPhone fix: long original chapter titles must not expand reader width. */
+html[data-catalog="candidate"] #reader{min-width:0;max-width:100%}
+html[data-catalog="candidate"] #reader select{display:block;width:100%;max-width:100%;min-width:0;overflow:hidden;text-overflow:ellipsis}
+html[data-catalog="candidate"] #reader .panel,html[data-catalog="candidate"] #reader .reading-surface{min-width:0;max-width:100%;overflow-wrap:anywhere}
+html[data-catalog="candidate"] #reader .tabs>*{min-width:0;max-width:100%}
