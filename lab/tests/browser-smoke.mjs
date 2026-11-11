@@ -72,13 +72,14 @@ try {
  await page.locator('#minutes').selectOption('5');
  await page.locator('#timerStart').click();
  assert.match(await page.locator('#clock').innerText(),/^0[45]:[0-5][0-9]$/);
+ await page.waitForTimeout(1300);
  await page.locator('#timerPause').click();
  const paused=await page.locator('#clock').innerText();
  await page.waitForTimeout(1200);
  assert.equal(await page.locator('#clock').innerText(),paused,'Focus pause should freeze clock');
  await page.locator('#timerStart').click();
  const resumed=await page.locator('#clock').innerText();
- assert.ok(Number(resumed.slice(0,2))<5,'Focus resume must not restart full duration');
+ assert.equal(resumed,paused,'Focus resume must preserve paused time');
  await page.locator('#timerReset').click();
  assert.equal(await page.locator('#clock').innerText(),'00:00');
  await page.reload({waitUntil:'networkidle'});
