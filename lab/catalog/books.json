@@ -10,7 +10,8 @@
         "ebook",
         "audio"
       ],
-      "chaptersSource": "legacy-embedded"
+      "chaptersSource": "lab/content/book_casa-oltre-bosco.json",
+      "contentStatus": "extracted-not-integrated"
     },
     {
       "id": "montecristo",
@@ -21,7 +22,8 @@
         "ebook",
         "audio"
       ],
-      "chaptersSource": "legacy-embedded"
+      "chaptersSource": "lab/content/book_montecristo.json",
+      "contentStatus": "extracted-not-integrated"
     }
   ]
 }
