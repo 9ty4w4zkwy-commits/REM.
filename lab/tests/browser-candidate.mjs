@@ -6,6 +6,9 @@ try{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('http://127.0.0.1:8765/rem-candidata.html',{waitUntil:'networkidle'});
  if(await page.locator('#welcome').isVisible())await page.locator('#welcomeStart').click();
+ assert.equal(await page.locator('#home').isVisible(),true,'Candidate should land on Home');
+ assert.match(await page.locator('#homeBookTitle').innerText(),/Montecristo/);
+ await page.locator('#homeLibrary').click();
  await page.getByRole('button',{name:'Apri libro'}).first().waitFor();
  assert.equal(await page.locator('.book').count(),1,'Candidate must have one book');
  assert.match(await page.locator('#books').innerText(),/Montecristo/);
@@ -18,6 +21,11 @@ try{
  assert.equal(await page.locator('#format option[value="audio"]').isDisabled(),true,'Unavailable audio must be disabled');
  assert.equal(await page.locator('#format option[value="paper"]').isDisabled(),true,'Unavailable paper synchronization must be disabled');
  assert.ok((await page.locator('#chapterText').innerText()).length>1000,'Full original Montecristo text must load');
+ await page.locator('#goLibrary').click();
+ await page.locator('#libraryHome').click();
+ assert.equal(await page.locator('#homeResume').isVisible(),true,'Home must offer resume after reading starts');
+ await page.locator('#homeResume').click();
+ assert.equal(await page.locator('#reader').isVisible(),true,'Home resume must open the reader');
  assert.deepEqual(errors,[],'No browser JavaScript errors');
  console.log('Montecristo-only candidate smoke test passed');
 }finally{await browser.close()}
