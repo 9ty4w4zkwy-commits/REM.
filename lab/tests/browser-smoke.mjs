@@ -1,0 +1,27 @@
+import { chromium } from 'playwright';
+import assert from 'node:assert/strict';
+const browser=await chromium.launch({headless:true});
+try {
+ const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+ const errors=[];
+ page.on('pageerror',e=>errors.push(e.message));
+ await page.goto('http://127.0.0.1:8765/rem-modulare-demo.html',{waitUntil:'networkidle'});
+ await page.getByRole('button',{name:'Apri libro'}).first().waitFor();
+ const buttons=page.getByRole('button',{name:'Apri libro'});
+ assert.equal(await buttons.count(),2,'Both extracted books should be available');
+ await buttons.last().click();
+ await page.locator('#chapterText').waitFor();
+ assert.ok((await page.locator('#chapterText').innerText()).length>1000,'Montecristo text should be loaded');
+ await page.locator('#minutes').selectOption('5');
+ await page.locator('#timerStart').click();
+ assert.match(await page.locator('#clock').innerText(),/^0[45]:[0-5][0-9]$/);
+ await page.locator('#timerPause').click();
+ const paused=await page.locator('#clock').innerText();
+ await page.waitForTimeout(1200);
+ assert.equal(await page.locator('#clock').innerText(),paused,'Focus pause should freeze clock');
+ await page.reload({waitUntil:'networkidle'});
+ await page.getByRole('button',{name:'Apri libro'}).last().click();
+ assert.ok((await page.locator('#chapterText').innerText()).length>1000,'Content should survive reload');
+ assert.deepEqual(errors,[],'Browser JS errors');
+ console.log('Chromium mobile smoke test passed');
+} finally {await browser.close()}
