@@ -129,3 +129,21 @@ html[data-catalog="candidate"] #status:empty{display:none}
 .profile-onboarding::before{background:linear-gradient(to right,#61dca9 var(--profile-progress,0%),#30475d var(--profile-progress,0%));-webkit-mask:repeating-linear-gradient(to right,#000 0 calc(25% - 6px),transparent calc(25% - 6px) 25%);mask:repeating-linear-gradient(to right,#000 0 calc(25% - 6px),transparent calc(25% - 6px) 25%)}
 .profile-onboarding #profileQuestion>h2:first-child{max-width:22ch}
 .profile-onboarding #profileQuestion>h2:first-child::first-line{color:#f7f4ed}
+
+/* Candidate-only REM 5.6 Home/Biblioteca visual hierarchy. Keep regression demo untouched. */
+html[data-catalog="candidate"]{--bg:#0d1727;--surface:#14263a;--surface2:#1a3147;--muted:#a9b9c8;--accent:#64dfa9}
+html[data-catalog="candidate"] header{max-width:100%;padding:16px max(20px,calc((100vw - 780px)/2));border-bottom:1px solid #294056;min-height:74px}
+html[data-catalog="candidate"] header h1{font-size:1.85rem;font-weight:800;letter-spacing:.04em}
+html[data-catalog="candidate"] header #goSettings{background:transparent;border:1px solid #35516a;font-size:.85rem;padding:9px 14px}
+html[data-catalog="candidate"] main{padding-top:24px}
+html[data-catalog="candidate"] #home>.eyebrow{margin-top:20px}
+html[data-catalog="candidate"] #home>h2{font-family:Georgia,serif;font-size:clamp(2.4rem,9.5vw,4.2rem);max-width:15ch;line-height:1.04;letter-spacing:-.04em;margin:12px 0 17px}
+html[data-catalog="candidate"] #home>.muted{max-width:34ch;line-height:1.6}
+html[data-catalog="candidate"] #home .home-spotlight{margin-top:32px;border-radius:22px;background:radial-gradient(ellipse at 100% 0%,#31544f,transparent 52%),linear-gradient(145deg,#21394a,#142438);box-shadow:0 12px 34px #050b163d}
+html[data-catalog="candidate"] #home .home-spotlight h3{max-width:17ch;letter-spacing:-.02em}
+html[data-catalog="candidate"] #home>.panel:not(.home-spotlight){border:1px solid #ffffff19;border-radius:20px}
+html[data-catalog="candidate"] #home>.panel:not(.home-spotlight) h3{font-family:Georgia,serif;font-weight:500;font-size:1.5rem;margin:3px 0 12px}
+html[data-catalog="candidate"] #library>h2{font-size:clamp(2rem,8vw,3.4rem);max-width:17ch}
+html[data-catalog="candidate"] #library>#books .book{background:#14263a;border-radius:20px}
+html[data-catalog="candidate"] #bookDetail .detail-hero{border-radius:22px;background:radial-gradient(ellipse at 100% 0%,#3c4b52,transparent 48%),linear-gradient(140deg,#26384b,#142438)}
+@media(max-width:480px){html[data-catalog="candidate"] header,html[data-catalog="candidate"] main{padding-left:20px;padding-right:20px}html[data-catalog="candidate"] #home .home-spotlight{padding:25px 22px}}
