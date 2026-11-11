@@ -4,7 +4,7 @@ const browser=await chromium.launch({headless:true,channel:'chrome'});
 try{
  const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
- await page.goto('http://127.0.0.1:8765/rem-candidata.html',{waitUntil:'networkidle'});
+ await page.goto((process.env.REM_BASE_URL||'http://127.0.0.1:8765')+'/rem-candidata.html',{waitUntil:'networkidle'});
  assert.equal(await page.locator('#profileOnboarding').isVisible(),true,'Original profile onboarding must appear first');
  await page.getByRole('button',{name:'Iniziamo'}).click();
  assert.match(await page.locator('#profileQuestion h2').innerText(),/perdere la cognizione del tempo/);
