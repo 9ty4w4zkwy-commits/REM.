@@ -168,3 +168,22 @@ html[data-catalog="candidate"] .home-free-copy button{margin-top:12px}
 html[data-catalog="candidate"] .home-library-callout{padding:25px 22px 29px;border:1px solid #ffffff20;border-radius:21px;background:linear-gradient(125deg,#19334a,#102335)}
 html[data-catalog="candidate"] .home-library-callout .muted{max-width:30ch}
 @media(max-width:360px){html[data-catalog="candidate"] .home-free-book{grid-template-columns:100px minmax(0,1fr);gap:12px;padding:12px}html[data-catalog="candidate"] .home-free-cover{min-height:156px;padding:10px}html[data-catalog="candidate"] .home-free-copy h4{font-size:1.15rem}}
+
+/* Candidate reader: quiet editorial typography, paper-like reading surface and iPhone controls. */
+html[data-catalog="candidate"] #reader{padding-bottom:calc(35px + env(safe-area-inset-bottom))}
+html[data-catalog="candidate"] #reader>.eyebrow{margin-top:30px}
+html[data-catalog="candidate"] #reader>#bookTitle{font-size:clamp(2rem,8vw,3.1rem);margin:8px 0 28px;max-width:17ch}
+html[data-catalog="candidate"] #reader>label{color:#b6c9d4;font-size:.78rem;letter-spacing:.04em;font-weight:650}
+html[data-catalog="candidate"] #reader>select{background:#162c40;border-color:#3b596c;min-height:48px;padding:12px 14px}
+html[data-catalog="candidate"] #reader .reading-progress{padding:20px 0 15px}
+html[data-catalog="candidate"] #reader .reader-tools{background:#0d1727;padding:10px 0 13px}
+html[data-catalog="candidate"] #reader .reader-tools button{border:1px solid #507287;background:#203b4b}
+html[data-catalog="candidate"] #reader .reading-surface{background:#f2ede1;color:#243039;border-radius:20px;padding:clamp(22px,6vw,44px);border:1px solid #d9d1c1;box-shadow:0 16px 44px #0004}
+html[data-catalog="candidate"] #reader .reading-surface h3{font:500 clamp(1.7rem,6vw,2.35rem)/1.22 Georgia,serif;color:#25343c;margin:8px 0 26px}
+html[data-catalog="candidate"] #reader .reading-surface #chapterText{font-family:Georgia,'Times New Roman',serif;line-height:1.95;letter-spacing:.004em;color:inherit}
+html[data-catalog="candidate"] #reader .reading-surface .reader-navigation{border-top:1px solid #c8c1b5;padding-top:18px;margin-top:30px}
+html[data-catalog="candidate"] #reader .reading-surface .reader-navigation button{color:#243039;background:#e2dacd;border-color:#b8b0a4}
+html[data-catalog="candidate"] #reader .reading-surface .reader-navigation button.primary{background:#226d5b;color:#fff;border-color:#226d5b}
+html[data-catalog="candidate"] #reader .reading-surface .status{color:#63717b}
+html[data-catalog="candidate"] #reader .reading-surface .reader-notes{color:#25343c}
+@media(max-width:390px){html[data-catalog="candidate"] #reader .reading-surface{padding:23px 19px}html[data-catalog="candidate"] #reader .reading-surface h3{overflow-wrap:anywhere}}
