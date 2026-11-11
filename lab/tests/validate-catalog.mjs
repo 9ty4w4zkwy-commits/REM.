@@ -9,3 +9,12 @@ for(const b of books.books){assert.equal(typeof b.id,'string');assert.ok(b.id);a
 const chapterIds=new Set();
 for(const c of chapters.chapters){assert.equal(typeof c.id,'string');assert.ok(c.id);assert.ok(!chapterIds.has(c.id),'Duplicate chapter ID');chapterIds.add(c.id);assert.ok(ids.has(c.bookId),'Unknown book ID: '+c.bookId);assert.equal(typeof c.text,'string');assert.equal(typeof c.title,'string')}
 console.log('Catalog validation passed:',ids.size,'books,',chapterIds.size,'chapters');
+
+const candidate=JSON.parse(fs.readFileSync('lab/catalog/books-candidate.json','utf8'));
+assert.equal(candidate.schemaVersion,1);
+assert.equal(candidate.books.length,1,'Candidate must contain exactly one book');
+assert.equal(candidate.books[0].id,'montecristo','Candidate must retain Montecristo');
+assert.ok(!candidate.books.some(b=>b.id==='casa'),'Candidate must exclude legacy Casa');
+assert.ok(books.books.some(b=>b.id==='casa'),'Development catalog must preserve Casa for regression checks');
+assert.ok(books.books.some(b=>b.id==='montecristo'),'Development catalog must preserve Montecristo');
+console.log('Candidate catalog validation passed');
