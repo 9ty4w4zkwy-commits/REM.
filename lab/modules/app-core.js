@@ -17,7 +17,29 @@ function library(){show('library');$('books').replaceChildren();for(const book o
 function openBook(id){state.selected=state.books.find(b=>b.id===id);if(!state.selected)return;show('reader');$('bookTitle').textContent=state.selected.title;const chapters=bookChapters(id);$('chapter').replaceChildren();chapters.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.title;$('chapter').append(o)});const previous=progress[id]||{};if(chapters.some(c=>c.id===previous.chapter))$('chapter').value=previous.chapter;state.format=previous.format||'ebook';$('format').value=state.format;renderChapter()}
 function renderChapter(){const id=state.selected?.id,c=state.chapters.find(c=>c.id===$('chapter').value);if(!id||!c){$('chapterTitle').textContent='Contenuto non disponibile';$('chapterText').textContent='Questo libro non ha ancora capitoli migrati.';return;}state.format=$('format').value;progress[id]={chapter:c.id,format:state.format};save();$('chapterTitle').textContent=c.title;$('chapterText').textContent=state.format==='ebook'?c.text:state.format==='audio'?'Traccia audio non disponibile per questo capitolo. Nessun audio simulato.':'Per il cartaceo, la sincronizzazione della posizione richiederà una mappatura tra pagine ed episodi.';$('chapterText').classList.toggle('reader',state.format==='ebook');$('source').textContent=c.source||'';$('audio').classList.toggle('hidden',state.format!=='audio');$('audio').replaceChildren();if(state.format==='audio'&&c.audioUrl){const a=document.createElement('audio');a.controls=true;a.src=c.audioUrl;$('audio').append(a)}}
 $('chapter').onchange=renderChapter;$('format').onchange=renderChapter;$('goLibrary').onclick=library;$('goSettings').onclick=()=>show('settings');$('goBack').onclick=library;
-$('theme').onchange=()=>{document.documentElement.style.setProperty('--accent',$('theme').value)};
+const appearanceKey='rem-modular-reader-appearance-v1';
+const defaultAppearance={fontSize:'medium',readingTheme:'paper',accent:'#64dfa9'};
+let appearance={...defaultAppearance};
+try{const stored=JSON.parse(localStorage.getItem(appearanceKey)||'{}');if(stored&&typeof stored==='object')appearance={...appearance,...stored}}catch{}
+function applyAppearance(){
+ const fontSizes={small:'1.05rem',medium:'1.18rem',large:'1.4rem',xlarge:'1.65rem'};
+ const themes=['paper','night','sepia'];
+ if(!Object.hasOwn(fontSizes,appearance.fontSize))appearance.fontSize='medium';
+ if(!themes.includes(appearance.readingTheme))appearance.readingTheme='paper';
+ if(!['#64dfa9','#f2bb62','#b6a5ff'].includes(appearance.accent))appearance.accent='#64dfa9';
+ document.documentElement.style.setProperty('--reader-font-size',fontSizes[appearance.fontSize]);
+ document.documentElement.style.setProperty('--accent',appearance.accent);
+ document.documentElement.dataset.readingTheme=appearance.readingTheme;
+ $('fontSize').value=appearance.fontSize;
+ $('readingTheme').value=appearance.readingTheme;
+ $('theme').value=appearance.accent;
+ try{localStorage.setItem(appearanceKey,JSON.stringify(appearance))}catch{}
+}
+$('readerAppearance').onclick=()=>show('settings');
+$('fontSize').onchange=()=>{appearance.fontSize=$('fontSize').value;applyAppearance()};
+$('readingTheme').onchange=()=>{appearance.readingTheme=$('readingTheme').value;applyAppearance()};
+$('theme').onchange=()=>{appearance.accent=$('theme').value;applyAppearance()};
+applyAppearance();
 function tick(){if(state.timer)state.remaining=Math.max(0,Math.ceil((state.deadline-Date.now())/1000));$('clock').textContent=String(Math.floor(state.remaining/60)).padStart(2,'0')+':'+String(state.remaining%60).padStart(2,'0');if(state.timer&&state.remaining===0){clearInterval(state.timer);state.timer=null;notify('Sessione Focus conclusa')}}
 function runTimer(){clearInterval(state.timer);if(state.remaining<=0)return;state.deadline=Date.now()+state.remaining*1000;state.timer=setInterval(tick,250);tick()}
 $('timerStart').onclick=()=>{const minutes=Number($('minutes').value);if(!Number.isFinite(minutes)||minutes<=0)return notify('Durata Focus non valida');state.remaining=Math.round(minutes*60);runTimer();notify('Sessione Focus avviata')};
