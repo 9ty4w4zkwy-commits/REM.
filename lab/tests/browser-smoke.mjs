@@ -12,6 +12,8 @@ try {
  await page.getByRole('button',{name:'Apri libro'}).first().waitFor();
  const buttons=page.getByRole('button',{name:'Apri libro'});
  assert.equal(await buttons.count(),2,'Both extracted books should be available');
+ assert.equal(await page.locator('.book-cover').count(),2,'Every catalog book should render a cover');
+ assert.equal(await page.locator('.book-cover[data-cover-style="classic"]').count(),1,'Classic cover style comes from catalog');
  await page.locator('#bookSearch').fill('montecristo');
  assert.equal(await page.getByRole('button',{name:'Apri libro'}).count(),1,'Search should filter books');
  await page.locator('#bookSearch').fill('nessun risultato possibile');
