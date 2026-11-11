@@ -1,7 +1,7 @@
 /* Standalone data-driven REM proof of architecture; not the approved REM 5.6. */
 (async function(){
 'use strict';
-const $=id=>document.getElementById(id),state={books:[],chapters:[],selected:null,format:'ebook',timer:null,remaining:0};
+const $=id=>document.getElementById(id),state={books:[],chapters:[],selected:null,format:'ebook',timer:null,remaining:0,deadline:0};
 const key='rem-modular-demo-v1';let progress={};try{progress=JSON.parse(localStorage.getItem(key)||'{}')}catch{}
 const save=()=>{try{localStorage.setItem(key,JSON.stringify(progress))}catch{}};
 const notify=s=>{$('status').textContent=s};
@@ -12,9 +12,10 @@ function openBook(id){state.selected=state.books.find(b=>b.id===id);if(!state.se
 function renderChapter(){const id=state.selected?.id,c=state.chapters.find(c=>c.id===$('chapter').value);if(!id||!c){$('chapterTitle').textContent='Contenuto non disponibile';$('chapterText').textContent='Questo libro non ha ancora capitoli migrati.';return;}state.format=$('format').value;progress[id]={chapter:c.id,format:state.format};save();$('chapterTitle').textContent=c.title;$('chapterText').textContent=state.format==='ebook'?c.text:state.format==='audio'?'Traccia audio non disponibile per questo capitolo. Nessun audio simulato.':'Per il cartaceo, la sincronizzazione della posizione richiederà una mappatura tra pagine ed episodi.';$('chapterText').classList.toggle('reader',state.format==='ebook');$('source').textContent=c.source||'';$('audio').classList.toggle('hidden',state.format!=='audio');$('audio').replaceChildren();if(state.format==='audio'&&c.audioUrl){const a=document.createElement('audio');a.controls=true;a.src=c.audioUrl;$('audio').append(a)}}
 $('chapter').onchange=renderChapter;$('format').onchange=renderChapter;$('goLibrary').onclick=library;$('goSettings').onclick=()=>show('settings');$('goBack').onclick=library;
 $('theme').onchange=()=>{document.documentElement.style.setProperty('--accent',$('theme').value)};
-$('timerStart').onclick=()=>{clearInterval(state.timer);state.remaining=Number($('minutes').value)*60;tick();state.timer=setInterval(()=>{state.remaining--;tick();if(state.remaining<=0){clearInterval(state.timer);state.timer=null;notify('Sessione Focus conclusa')}},1000)};
-$('timerPause').onclick=()=>{clearInterval(state.timer);state.timer=null;notify('Timer in pausa')};
-$('timerReset').onclick=()=>{clearInterval(state.timer);state.timer=null;state.remaining=0;tick()};
-function tick(){$('clock').textContent=String(Math.floor(state.remaining/60)).padStart(2,'0')+':'+String(state.remaining%60).padStart(2,'0')}
+function tick(){if(state.timer)state.remaining=Math.max(0,Math.ceil((state.deadline-Date.now())/1000));$('clock').textContent=String(Math.floor(state.remaining/60)).padStart(2,'0')+':'+String(state.remaining%60).padStart(2,'0');if(state.timer&&state.remaining===0){clearInterval(state.timer);state.timer=null;notify('Sessione Focus conclusa')}}
+function runTimer(){clearInterval(state.timer);if(state.remaining<=0)return;state.deadline=Date.now()+state.remaining*1000;state.timer=setInterval(tick,250);tick()}
+$('timerStart').onclick=()=>{const minutes=Number($('minutes').value);if(!Number.isFinite(minutes)||minutes<=0)return notify('Durata Focus non valida');state.remaining=Math.round(minutes*60);runTimer();notify('Sessione Focus avviata')};
+$('timerPause').onclick=()=>{if(state.timer){tick();clearInterval(state.timer);state.timer=null;notify('Timer in pausa')}}; 
+$('timerReset').onclick=()=>{clearInterval(state.timer);state.timer=null;state.remaining=0;tick();notify('Timer azzerato')};
 try{const [b,c]=await Promise.all([fetch('./lab/catalog/books.json'),fetch('./lab/catalog/chapters.json')]);if(!b.ok||!c.ok)throw Error('Dati non disponibili');const bd=await b.json(),cd=await c.json();if(bd.schemaVersion!==1||cd.schemaVersion!==1||!Array.isArray(bd.books)||!Array.isArray(cd.chapters))throw Error('Schema dati non valido');const ids=new Set();for(const book of bd.books){if(!book||typeof book.id!=='string'||!book.id||typeof book.title!=='string'||!book.title||ids.has(book.id))throw Error('Catalogo: ID o titolo non valido');ids.add(book.id)}const chapterIds=new Set();for(const ch of cd.chapters){if(!ch||typeof ch.id!=='string'||!ch.id||chapterIds.has(ch.id)||!ids.has(ch.bookId)||typeof ch.text!=='string')throw Error('Capitoli: riferimento o contenuto non valido');chapterIds.add(ch.id)}state.books=bd.books;state.chapters=cd.chapters;library();notify('Demo modulare caricata: non sostituisce REM 5.6')}catch(e){notify('Errore: '+e.message)}
 })();
