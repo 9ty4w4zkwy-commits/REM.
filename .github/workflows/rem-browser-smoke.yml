@@ -31,6 +31,7 @@ jobs:
           curl -fsS http://127.0.0.1:8765/rem-modulare-demo.html >/dev/null
           node lab/tests/browser-smoke.mjs
           node lab/tests/browser-candidate.mjs
+          REM_BROWSER=webkit node lab/tests/browser-candidate.mjs
           node lab/tests/browser-layout.mjs
           node lab/tests/capture-candidate.mjs
           node lab/tests/capture-approved-reference.mjs
@@ -44,6 +45,7 @@ jobs:
           for i in $(seq 1 30); do if curl -fsS http://127.0.0.1:8766/rem-candidata.html >/dev/null; then break; fi; sleep 1; done
           curl -fsS http://127.0.0.1:8766/lab/content/book_montecristo.json >/dev/null
           REM_BASE_URL=http://127.0.0.1:8766 node lab/tests/browser-candidate.mjs
+          REM_BROWSER=webkit REM_BASE_URL=http://127.0.0.1:8766 node lab/tests/browser-candidate.mjs
       - name: Build and test single-file candidate in Chrome
         run: |
           python3 lab/tests/build-single-html.py
