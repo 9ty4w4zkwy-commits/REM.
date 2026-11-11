@@ -187,3 +187,12 @@ html[data-catalog="candidate"] #reader .reading-surface .reader-navigation butto
 html[data-catalog="candidate"] #reader .reading-surface .status{color:#63717b}
 html[data-catalog="candidate"] #reader .reading-surface .reader-notes{color:#25343c}
 @media(max-width:390px){html[data-catalog="candidate"] #reader .reading-surface{padding:23px 19px}html[data-catalog="candidate"] #reader .reading-surface h3{overflow-wrap:anywhere}}
+
+/* Preserve reader's persisted paper / sepia / night themes after candidate polish. */
+html[data-catalog="candidate"][data-reading-theme="night"] #reader .reading-surface{background:#18212b;color:#e9e5dc;border-color:#364450}
+html[data-catalog="candidate"][data-reading-theme="night"] #reader .reading-surface h3,html[data-catalog="candidate"][data-reading-theme="night"] #reader .reading-surface #chapterText{color:#e9e5dc}
+html[data-catalog="candidate"][data-reading-theme="night"] #reader .reading-surface .status{color:#b9c2cb}
+html[data-catalog="candidate"][data-reading-theme="night"] #reader .reading-surface .reader-navigation{border-color:#52616a}
+html[data-catalog="candidate"][data-reading-theme="sepia"] #reader .reading-surface{background:#e9dbc0;color:#48372a;border-color:#c6b79a}
+html[data-catalog="candidate"][data-reading-theme="sepia"] #reader .reading-surface h3,html[data-catalog="candidate"][data-reading-theme="sepia"] #reader .reading-surface #chapterText{color:#48372a}
+html[data-catalog="candidate"][data-reading-theme="sepia"] #reader .reading-surface .status{color:#6b5845}
