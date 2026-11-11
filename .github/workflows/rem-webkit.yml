@@ -1,0 +1,34 @@
+name: REM WebKit independent verification
+on:
+  workflow_dispatch:
+  push:
+    branches: [rem-lab-modularizzazione-v1]
+    paths:
+      - 'lab/**'
+      - 'rem-candidata.html'
+      - '.github/workflows/rem-webkit.yml'
+jobs:
+  webkit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright and WebKit dependencies
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps webkit
+      - name: Verify candidate on WebKit
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/rem-webkit-http.log 2>&1 &
+          for i in $(seq 1 30); do if curl -fsS http://127.0.0.1:8765/rem-candidata.html >/dev/null; then break; fi; sleep 1; done
+          REM_BROWSER=webkit node lab/tests/browser-candidate.mjs
+          python3 lab/tests/build-single-html.py
+          cd lab/dist/rem-candidate-single
+          python3 -m http.server 8767 --bind 127.0.0.1 > /tmp/rem-webkit-single.log 2>&1 &
+          cd ../../..
+          for i in $(seq 1 30); do if curl -fsS http://127.0.0.1:8767/rem-candidata.html >/dev/null; then break; fi; sleep 1; done
+          REM_BROWSER=webkit REM_BASE_URL=http://127.0.0.1:8767 node lab/tests/browser-candidate.mjs
+          REM_BROWSER=webkit REM_SINGLE_FILE_URL=file://$PWD/lab/dist/rem-candidate-single/rem-candidata.html node lab/tests/browser-candidate.mjs
