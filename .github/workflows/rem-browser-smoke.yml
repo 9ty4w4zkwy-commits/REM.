@@ -29,6 +29,7 @@ jobs:
           curl -fsS http://127.0.0.1:8765/rem-modulare-demo.html >/dev/null
           node lab/tests/browser-smoke.mjs
           node lab/tests/browser-candidate.mjs
+          node lab/tests/browser-layout.mjs
           node lab/tests/capture-candidate.mjs
           node lab/tests/capture-approved-reference.mjs
       - name: Upload candidate screenshots for visual review
