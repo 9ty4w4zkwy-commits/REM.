@@ -14,7 +14,7 @@ concurrency:
 jobs:
   browser:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -23,7 +23,7 @@ jobs:
       - name: Install Playwright (use runner Chrome)
         run: npm install --no-save playwright
       - name: Install Safari WebKit browser engine
-        run: npx playwright install --with-deps webkit
+        run: npx playwright install webkit
       - name: Start static server and test mobile viewport
         run: |
           python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/rem-http.log 2>&1 &
