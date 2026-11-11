@@ -7,7 +7,7 @@ const save=()=>{try{localStorage.setItem(key,JSON.stringify(progress))}catch{}};
 const notify=s=>{$('status').textContent=s};
 const show=id=>{for(const x of ['welcome','library','reader','settings'])$(x).classList.toggle('hidden',x!==id)};
 const welcomeKey='rem-modular-welcome-v1';
-$('welcomeStart').onclick=()=>{try{localStorage.setItem(welcomeKey,'seen')}catch{}library()};
+$('welcomeStart').onclick=()=>{appearance.readingTheme=$('welcomeTheme').value;applyAppearance();try{localStorage.setItem(welcomeKey,'seen')}catch{}library()};
 const bookChapters=id=>state.chapters.filter(c=>c.bookId===id);
 function readingStats(book){
  const chapters=bookChapters(book.id);
@@ -64,6 +64,7 @@ function applyAppearance(){
  document.documentElement.dataset.readingTheme=appearance.readingTheme;
  $('fontSize').value=appearance.fontSize;
  $('readingTheme').value=appearance.readingTheme;
+ $('welcomeTheme').value=appearance.readingTheme;
  $('theme').value=appearance.accent;
  try{localStorage.setItem(appearanceKey,JSON.stringify(appearance))}catch{}
 }
