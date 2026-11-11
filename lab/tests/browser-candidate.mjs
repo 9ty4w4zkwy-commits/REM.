@@ -1,6 +1,7 @@
-import { chromium } from 'playwright';
+import { chromium, webkit } from 'playwright';
 import assert from 'node:assert/strict';
-const browser=await chromium.launch({headless:true,channel:'chrome'});
+const engine=process.env.REM_BROWSER==='webkit'?webkit:chromium;
+const browser=await engine.launch(process.env.REM_BROWSER==='webkit'?{headless:true}:{headless:true,channel:'chrome'});
 try{
  const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
