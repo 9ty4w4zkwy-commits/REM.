@@ -30,6 +30,7 @@ jobs:
           node lab/tests/browser-smoke.mjs
           node lab/tests/browser-candidate.mjs
           node lab/tests/capture-candidate.mjs
+          node lab/tests/capture-approved-reference.mjs
       - name: Upload candidate screenshots for visual review
         if: always()
         uses: actions/upload-artifact@v4
