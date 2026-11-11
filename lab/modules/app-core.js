@@ -40,6 +40,8 @@ function home(){
  if(book){
   $('homeBookTitle').textContent=book.title;
   $('homeBookAuthor').textContent=book.author||'';
+  for(const id of ['homeFreeCoverTitle','homeFreeTitle'])if($(id))$(id).textContent=book.title;
+  for(const id of ['homeFreeCoverAuthor','homeFreeAuthor'])if($(id))$(id).textContent=book.author||'';
   $('homeExplore').onclick=()=>openDetail(book.id);
  }
  const started=state.books.find(item=>readingStats(item).read>0);
