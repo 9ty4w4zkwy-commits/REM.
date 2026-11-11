@@ -1,0 +1,42 @@
+name: REM extract legacy book data
+on:
+  push:
+    branches: [rem-lab-modularizzazione-v1]
+    paths:
+      - 'lab/tests/extract-legacy-books.py'
+      - '.github/workflows/rem-extract-books.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Extract complete embedded book data
+        run: python lab/tests/extract-legacy-books.py
+      - name: Verify extracted content
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for name, expected in [('book_montecristo.json',452),('book_casa-oltre-bosco.json',278)]:
+              obj=json.loads((Path('lab/content')/name).read_text(encoding='utf-8'))
+              assert len(obj['segmenti'])==expected, name
+              assert all(s.get('text') for s in obj['segmenti']), name
+              print(name, len(obj['segmenti']))
+          PY
+      - name: Commit extracted JSON to isolated branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lab/content/book_montecristo.json lab/content/book_casa-oltre-bosco.json
+          if ! git diff --cached --quiet; then
+            git commit -m "data(lab): extract complete book segments from approved legacy source"
+            git push origin HEAD:rem-lab-modularizzazione-v1
+          fi
