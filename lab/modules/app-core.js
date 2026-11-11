@@ -155,6 +155,9 @@ for(const book of state.books){
  }catch(error){state.chapters=state.chapters.filter(ch=>ch.bookId!==book.id);failedBooks.push(book.title);console.error('Contenuto estratto non caricato:',book.id,error)}
 }
 let seenWelcome=false;try{seenWelcome=localStorage.getItem(welcomeKey)==='seen'}catch{}
-if(seenWelcome){if(document.documentElement.dataset.catalog==='candidate')home();else library()}else show('welcome');
+if(document.documentElement.dataset.catalog==='candidate'){
+ home();
+ if(window.REMProfile&&!window.REMProfile.hasFinished())window.REMProfile.open(()=>home());
+}else if(seenWelcome)library();else show('welcome');
 notify(failedBooks.length?'Contenuti non disponibili: '+failedBooks.join(', '):'Demo modulare caricata: non sostituisce REM 5.6')}catch(e){notify('Errore: '+e.message)}
 })();
