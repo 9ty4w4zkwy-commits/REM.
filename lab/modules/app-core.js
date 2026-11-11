@@ -54,9 +54,19 @@ $('readingNote').addEventListener('input',()=>{
  if(value)notes[id]=value;else delete notes[id];
  try{localStorage.setItem(notesKey,JSON.stringify(notes));$('noteStatus').textContent='Nota salvata su questo dispositivo.'}catch{$('noteStatus').textContent='Impossibile salvare la nota su questo dispositivo.'}
 });
+function updateChapterProgress(){
+ if(!state.selected||$('reader').classList.contains('hidden')||state.format!=='ebook')return;
+ const el=$('chapterText'),rect=el.getBoundingClientRect();
+ const readable=Math.max(1,rect.height-window.innerHeight*0.5);
+ const percent=Math.max(0,Math.min(100,Math.round(-rect.top/readable*100)));
+ $('chapterProgress').value=percent;
+ $('chapterProgressLabel').textContent=percent+'%';
+}
+window.addEventListener('scroll',updateChapterProgress,{passive:true});
+window.addEventListener('resize',updateChapterProgress);
 function renderChapter(){const id=state.selected?.id,c=state.chapters.find(c=>c.id===$('chapter').value);if(!id||!c){$('chapterTitle').textContent='Contenuto non disponibile';$('chapterText').textContent='Questo libro non ha ancora capitoli migrati.';return;}$('previousChapter').disabled=$('chapter').selectedIndex<=0;
 $('nextChapter').disabled=$('chapter').selectedIndex>=$('chapter').options.length-1;
-state.format=$('format').value;progress[id]={chapter:c.id,format:state.format};save();$('readingNotePanel').classList.toggle('hidden',state.format!=='ebook');$('readingNote').value=notes[noteId()]||'';$('noteStatus').textContent='Le note restano su questo dispositivo.';$('chapterTitle').textContent=c.title;$('chapterText').textContent=state.format==='ebook'?c.text:state.format==='audio'?'Traccia audio non disponibile per questo capitolo. Nessun audio simulato.':'Per il cartaceo, la sincronizzazione della posizione richiederà una mappatura tra pagine ed episodi.';$('chapterText').classList.toggle('reader',state.format==='ebook');$('source').textContent=c.source||'';$('audio').classList.toggle('hidden',state.format!=='audio');$('audio').replaceChildren();if(state.format==='audio'&&c.audioUrl){const a=document.createElement('audio');a.controls=true;a.src=c.audioUrl;$('audio').append(a)}}
+state.format=$('format').value;progress[id]={chapter:c.id,format:state.format};save();$('readingNotePanel').classList.toggle('hidden',state.format!=='ebook');$('readingNote').value=notes[noteId()]||'';$('noteStatus').textContent='Le note restano su questo dispositivo.';$('chapterTitle').textContent=c.title;$('chapterText').textContent=state.format==='ebook'?c.text:state.format==='audio'?'Traccia audio non disponibile per questo capitolo. Nessun audio simulato.':'Per il cartaceo, la sincronizzazione della posizione richiederà una mappatura tra pagine ed episodi.';$('chapterText').classList.toggle('reader',state.format==='ebook');$('chapterProgress').value=0;$('chapterProgressLabel').textContent='0%';requestAnimationFrame(updateChapterProgress);$('source').textContent=c.source||'';$('audio').classList.toggle('hidden',state.format!=='audio');$('audio').replaceChildren();if(state.format==='audio'&&c.audioUrl){const a=document.createElement('audio');a.controls=true;a.src=c.audioUrl;$('audio').append(a)}}
 $('chapter').onchange=renderChapter;$('format').onchange=renderChapter;$('goLibrary').onclick=library;$('goSettings').onclick=()=>{state.settingsReturn=$('reader').classList.contains('hidden')?'library':'reader';show('settings')};$('goBack').onclick=()=>{if(state.settingsReturn==='reader'&&state.selected)show('reader');else library()};
 const appearanceKey='rem-modular-reader-appearance-v1';
 const defaultAppearance={fontSize:'medium',readingTheme:'paper',accent:'#64dfa9'};
