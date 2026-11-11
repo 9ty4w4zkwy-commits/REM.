@@ -103,3 +103,20 @@ body.immersive-reading main{max-width:820px}
 .profile-choice.selected{border-color:#64dfa9;background:#183d3a}
 .profile-actions{display:flex;justify-content:space-between;gap:14px;margin:20px 0}
 .profile-edit{margin:12px 0}
+
+/* Visual parity: approved REM 5.6 first-run screen at 390px. */
+body.profile-open{overflow:hidden}
+.profile-onboarding{padding:calc(env(safe-area-inset-top) + 30px) 20px calc(env(safe-area-inset-bottom) + 32px);background:#0d1727}
+.profile-header{margin-bottom:32px}
+.profile-header .eyebrow{font-size:1.55rem;letter-spacing:.2em;color:#fff;font-weight:750;margin:0}
+.profile-header .eyebrow::first-letter{color:#fff}
+.profile-header button{background:transparent;border:1px solid #57738a;border-radius:17px;padding:9px 13px;font-size:.88rem}
+.profile-onboarding::before{content:'';display:block;position:absolute;left:20px;right:20px;top:105px;height:5px;border-radius:5px;background:linear-gradient(to right,#60dba9 var(--profile-progress,0%),#30475d var(--profile-progress,0%));}
+.profile-onboarding #profileStep{margin:38px 0 0;min-height:0;font-size:.72rem}
+.profile-onboarding #profileStep:empty{display:none}
+.profile-onboarding h2{font-size:clamp(1.65rem,7vw,2.25rem);font-weight:700;line-height:1.18;margin:56px 0 18px;letter-spacing:-.015em}
+.profile-onboarding #profileStep:not(:empty)+#profileQuestion h2{margin-top:18px}
+.profile-onboarding p{line-height:1.55;font-size:1rem}
+.profile-onboarding #profileQuestion>.primary{width:100%;min-height:56px;margin-top:27px;border-radius:15px;font-weight:750}
+.profile-onboarding .profile-actions .primary{flex:1}
+@media(min-width:620px){.profile-onboarding{padding-left:max(20px,calc((100vw - 580px)/2));padding-right:max(20px,calc((100vw - 580px)/2))}.profile-onboarding::before{left:max(20px,calc((100vw - 580px)/2));right:max(20px,calc((100vw - 580px)/2))}}
