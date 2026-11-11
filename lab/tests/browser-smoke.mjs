@@ -6,7 +6,9 @@ try {
  const errors=[];
  page.on('pageerror',e=>errors.push(e.message));
  await page.goto('http://127.0.0.1:8765/rem-modulare-demo.html',{waitUntil:'networkidle'});
+ await page.locator('#welcomeTheme').selectOption('sepia');
  await page.locator('#welcomeStart').click();
+ assert.equal(await page.locator('html').getAttribute('data-reading-theme'),'sepia','Onboarding theme should apply');
  await page.getByRole('button',{name:'Apri libro'}).first().waitFor();
  const buttons=page.getByRole('button',{name:'Apri libro'});
  assert.equal(await buttons.count(),2,'Both extracted books should be available');
