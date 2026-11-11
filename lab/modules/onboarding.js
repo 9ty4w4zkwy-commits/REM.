@@ -13,11 +13,12 @@ let stored={};try{stored=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch{}
 let answers=Array.isArray(stored.answers)?stored.answers.map(a=>Array.isArray(a)?a:[]):questions.map(()=>[]);
 let page=-1,onDone=()=>{};
 function persist(status){try{localStorage.setItem(KEY,JSON.stringify({status,answers,updatedAt:new Date().toISOString()}))}catch{}}
-function close(status){persist(status);$('profileOnboarding').classList.add('hidden');$('profileEdit').classList.remove('hidden');onDone();window.dispatchEvent(new Event('rem-profile-updated'))}
+function close(status){document.body.classList.remove('profile-open');persist(status);$('profileOnboarding').classList.add('hidden');$('profileEdit').classList.remove('hidden');onDone();window.dispatchEvent(new Event('rem-profile-updated'))}
 function button(text,cls,callback){const b=document.createElement('button');b.type='button';b.textContent=text;b.className=cls;b.onclick=callback;return b}
 function draw(){
  const area=$('profileQuestion');area.replaceChildren();
- $('profileStep').textContent=page<0?'Benvenuta in REM':'Domanda '+(page+1)+' di 4';
+ $('profileStep').textContent=page<0?'':'Domanda '+(page+1)+' di 4';
+ $('profileOnboarding').style.setProperty('--profile-progress',String(page<0?0:(page+1)*25)+'%');
  if(page<0){
   const title=document.createElement('h2');title.textContent='Ogni storia inizia da chi la legge.';
   const intro=document.createElement('p');intro.textContent='Raccontaci qualcosa di te. Ti aiuteremo a scoprire storie che forse non avresti mai cercato.';
@@ -42,7 +43,7 @@ function draw(){
  const note=document.createElement('p');note.className='muted';note.textContent='Le risposte restano su questo dispositivo. Puoi modificarle o saltare il percorso.';
  area.append(title,help,choices,actions,note);
 }
-function open(done){onDone=typeof done==='function'?done:()=>{};page=-1;$('profileOnboarding').classList.remove('hidden');draw()}
+function open(done){document.body.classList.add('profile-open');onDone=typeof done==='function'?done:()=>{};page=-1;$('profileOnboarding').classList.remove('hidden');draw()}
 $('profileSkip').onclick=()=>close('skipped');
 $('profileEdit').onclick=()=>open(()=>{});
 const hasFinished=()=>{let x={};try{x=JSON.parse(localStorage.getItem(KEY)||'{}')}catch{}return x.status==='completed'||x.status==='skipped'};
