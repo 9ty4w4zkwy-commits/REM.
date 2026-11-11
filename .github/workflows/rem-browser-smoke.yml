@@ -23,7 +23,7 @@ jobs:
       - name: Install Playwright (use runner Chrome)
         run: npm install --no-save playwright
       - name: Install Safari WebKit browser engine
-        run: npx playwright install webkit
+        run: npx playwright install webkit && npx playwright install-deps webkit
       - name: Start static server and test mobile viewport
         run: |
           python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/rem-http.log 2>&1 &
