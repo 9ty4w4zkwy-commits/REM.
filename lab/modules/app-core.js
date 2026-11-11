@@ -5,9 +5,9 @@ const $=id=>document.getElementById(id),state={books:[],chapters:[],selected:nul
 const key='rem-modular-demo-v1';let progress={};try{progress=JSON.parse(localStorage.getItem(key)||'{}')}catch{}
 const save=()=>{try{localStorage.setItem(key,JSON.stringify(progress))}catch{}};
 const notify=s=>{$('status').textContent=s};
-const show=id=>{for(const x of ['welcome','library','bookDetail','reader','settings'])$(x).classList.toggle('hidden',x!==id)};
+const show=id=>{for(const x of ['welcome','home','library','bookDetail','reader','settings'])$(x).classList.toggle('hidden',x!==id)};
 const welcomeKey='rem-modular-welcome-v1';
-$('welcomeStart').onclick=()=>{appearance.readingTheme=$('welcomeTheme').value;applyAppearance();try{localStorage.setItem(welcomeKey,'seen')}catch{}library()};
+$('welcomeStart').onclick=()=>{appearance.readingTheme=$('welcomeTheme').value;applyAppearance();try{localStorage.setItem(welcomeKey,'seen')}catch{}if(document.documentElement.dataset.catalog==='candidate')home();else library()};
 const bookChapters=id=>state.chapters.filter(c=>c.bookId===id);
 function readingStats(book){
  const chapters=bookChapters(book.id);
@@ -33,6 +33,23 @@ $('resetReading').onclick=()=>{
  if(!window.confirm('Cancellare tutti i progressi di lettura salvati su questo dispositivo?'))return;
  progress={};save();library();notify('Progressi di lettura cancellati');
 };
+function home(){
+ if(document.documentElement.dataset.catalog!=='candidate')return library();
+ setImmersive(false);
+ const book=state.books[0];
+ if(book){
+  $('homeBookTitle').textContent=book.title;
+  $('homeBookAuthor').textContent=book.author||'';
+  $('homeExplore').onclick=()=>openDetail(book.id);
+ }
+ const started=state.books.find(item=>readingStats(item).read>0);
+ $('homeResume').classList.toggle('hidden',!started);
+ $('homeResumeStatus').textContent=started?'Riprendi '+started.title+' dal capitolo salvato.':'Non hai ancora iniziato una lettura.';
+ $('homeResume').onclick=()=>{if(started)openBook(started.id)};
+ show('home');
+}
+if($('homeLibrary'))$('homeLibrary').onclick=library;
+if($('libraryHome'))$('libraryHome').onclick=home;
 function library(){setImmersive(false);show('library');updateHistory();$('books').replaceChildren();const query=$('bookSearch').value.trim().toLocaleLowerCase('it');const visible=state.books.filter(book=>(book.title+' '+(book.author||'')).toLocaleLowerCase('it').includes(query));if(!visible.length){const empty=document.createElement('p');empty.className='muted';empty.textContent='Nessun libro trovato.';$('books').append(empty)}for(const book of visible){const div=document.createElement('div');div.className='book';const cover=document.createElement('div');cover.className='book-cover';const coverStyle=book.visual?.coverStyle;if(['forest','classic'].includes(coverStyle))cover.dataset.coverStyle=coverStyle;const coverLabel=document.createElement('span');coverLabel.className='book-cover-label';coverLabel.textContent=book.visual?.eyebrow||'REM LIBRARY';const coverTitle=document.createElement('strong');coverTitle.textContent=book.title;const coverAuthor=document.createElement('span');coverAuthor.className='book-cover-author';coverAuthor.textContent=book.author||'Una storia da scoprire';cover.append(coverLabel,coverTitle,coverAuthor);div.append(cover);const h=document.createElement('h3');h.textContent=book.title;div.append(h);const p=document.createElement('p');p.className='muted';p.textContent=(book.author||'Autore non indicato')+' · '+bookChapters(book.id).length+' capitoli caricati';div.append(p);const stats=readingStats(book);if(stats.total){const label=document.createElement('p');label.className='muted';label.textContent=stats.read?'Riprendi dal capitolo '+stats.read+' di '+stats.total:'Lettura non iniziata';div.append(label)}const b=document.createElement('button');b.className='primary';b.textContent=bookChapters(book.id).length?'Apri libro':'Contenuto non ancora migrato';b.disabled=!bookChapters(book.id).length;b.onclick=()=>document.documentElement.dataset.catalog==='candidate'?openDetail(book.id):openBook(book.id);div.append(b);$('books').append(div)}}
 $('bookSearch').addEventListener('input',library);
 function openDetail(id){
@@ -138,6 +155,6 @@ for(const book of state.books){
  }catch(error){state.chapters=state.chapters.filter(ch=>ch.bookId!==book.id);failedBooks.push(book.title);console.error('Contenuto estratto non caricato:',book.id,error)}
 }
 let seenWelcome=false;try{seenWelcome=localStorage.getItem(welcomeKey)==='seen'}catch{}
-if(seenWelcome)library();else show('welcome');
+if(seenWelcome){if(document.documentElement.dataset.catalog==='candidate')home();else library()}else show('welcome');
 notify(failedBooks.length?'Contenuti non disponibili: '+failedBooks.join(', '):'Demo modulare caricata: non sostituisce REM 5.6')}catch(e){notify('Errore: '+e.message)}
 })();
