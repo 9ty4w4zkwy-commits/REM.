@@ -31,6 +31,7 @@ for(const book of state.books){
   if(!response.ok)throw Error('HTTP '+response.status);
   const extracted=await response.json();
   if(extracted.id!==(book.legacyContentId||book.id)||!Array.isArray(extracted.segmenti)||!extracted.segmenti.length)throw Error('Contenuto estratto non valido');
+  if(!extracted.segmenti.every(segment=>typeof segment.text==='string'&&segment.text.trim()&&Number.isInteger(segment.chapter)))throw Error('Segmenti del libro incompleti');
   const grouped=new Map();
   for(const segment of extracted.segmenti){
    const chapter=String(segment.chapter??'1');
