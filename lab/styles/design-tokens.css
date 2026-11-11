@@ -1,0 +1,12 @@
+/* REM Laboratorio — token visivi centralizzati.
+   Preparazione non invasiva: questo foglio non è ancora collegato alla UI.
+   I valori effettivi della versione 5.6 vanno inventariati prima dell'attivazione. */
+:root {
+  --rem-brand-primary: #24365a;
+  --rem-brand-accent: #64dfa9;
+  --rem-text-primary: #101a2a;
+  --rem-surface-primary: #ffffff;
+  --rem-radius-card: 16px;
+  --rem-logo-url: url("../assets/rem-logo.svg");
+}
+/* Non introdurre override globali del legacy finché non sono mappati i componenti. */
