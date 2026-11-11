@@ -17,6 +17,15 @@ function updateHistory(){
  const started=state.books.filter(book=>readingStats(book).read>0).length;
  $('historySummary').textContent=started?started+' '+(started===1?'libro iniziato':'libri iniziati')+' su '+state.books.length:'Nessuna lettura iniziata.';
  $('resetReading').disabled=started===0;
+ $('historyBooks').replaceChildren();
+ for(const book of state.books){
+  const stats=readingStats(book);if(!stats.read)continue;
+  const button=document.createElement('button');
+  button.type='button';button.className='history-resume';
+  button.textContent='Riprendi '+book.title+' · capitolo '+stats.read+' di '+stats.total;
+  button.onclick=()=>openBook(book.id);
+  $('historyBooks').append(button);
+ }
 }
 $('resetReading').onclick=()=>{
  if(!window.confirm('Cancellare tutti i progressi di lettura salvati su questo dispositivo?'))return;
