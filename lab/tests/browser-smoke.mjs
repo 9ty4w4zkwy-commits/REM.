@@ -53,7 +53,8 @@ try {
  await page.locator('#readingTheme').selectOption('night');
  assert.equal(await page.locator('html').getAttribute('data-reading-theme'),'night');
  await page.locator('#goBack').click();
- await page.getByRole('button',{name:'Apri libro'}).last().click();
+ assert.equal(await page.locator('#reader').isVisible(),true,'Appearance should return to current book');
+ assert.match(await page.locator('#bookTitle').innerText(),/Montecristo/);
  assert.equal(await page.locator('html').getAttribute('data-reading-theme'),'night');
  assert.equal(await page.locator('#chapterText').evaluate(el=>getComputedStyle(el).fontSize),'22.4px','Large font should apply');
  await page.locator('#minutes').selectOption('5');
@@ -63,6 +64,11 @@ try {
  const paused=await page.locator('#clock').innerText();
  await page.waitForTimeout(1200);
  assert.equal(await page.locator('#clock').innerText(),paused,'Focus pause should freeze clock');
+ await page.locator('#timerStart').click();
+ const resumed=await page.locator('#clock').innerText();
+ assert.ok(Number(resumed.slice(0,2))<5,'Focus resume must not restart full duration');
+ await page.locator('#timerReset').click();
+ assert.equal(await page.locator('#clock').innerText(),'00:00');
  await page.reload({waitUntil:'networkidle'});
  await page.getByRole('button',{name:'Apri libro'}).last().click();
  assert.ok((await page.locator('#chapterText').innerText()).length>1000,'Content should survive reload');
