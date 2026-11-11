@@ -159,5 +159,5 @@ if(document.documentElement.dataset.catalog==='candidate'){
  home();
  if(window.REMProfile&&!window.REMProfile.hasFinished())window.REMProfile.open(()=>home());
 }else if(seenWelcome)library();else show('welcome');
-notify(failedBooks.length?'Contenuti non disponibili: '+failedBooks.join(', '):'Demo modulare caricata: non sostituisce REM 5.6')}catch(e){notify('Errore: '+e.message)}
+notify(failedBooks.length?'Contenuti non disponibili: '+failedBooks.join(', '):'')}catch(e){notify('Errore: '+e.message)}
 })();
