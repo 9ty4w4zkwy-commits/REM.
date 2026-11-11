@@ -22,6 +22,14 @@ try {
  await page.getByRole('button',{name:'Apri libro'}).last().click();
  await page.locator('#chapterText').waitFor();
  assert.ok((await page.locator('#chapterText').innerText()).length>1000,'Montecristo text should be loaded');
+ await page.locator('#readerAppearance').click();
+ await page.locator('#fontSize').selectOption('large');
+ await page.locator('#readingTheme').selectOption('night');
+ assert.equal(await page.locator('html').getAttribute('data-reading-theme'),'night');
+ await page.locator('#goBack').click();
+ await page.getByRole('button',{name:'Apri libro'}).last().click();
+ assert.equal(await page.locator('html').getAttribute('data-reading-theme'),'night');
+ assert.equal(await page.locator('#chapterText').evaluate(el=>getComputedStyle(el).fontSize),'22.4px','Large font should apply');
  await page.locator('#minutes').selectOption('5');
  await page.locator('#timerStart').click();
  assert.match(await page.locator('#clock').innerText(),/^0[45]:[0-5][0-9]$/);
@@ -32,6 +40,7 @@ try {
  await page.reload({waitUntil:'networkidle'});
  await page.getByRole('button',{name:'Apri libro'}).last().click();
  assert.ok((await page.locator('#chapterText').innerText()).length>1000,'Content should survive reload');
+ assert.equal(await page.locator('html').getAttribute('data-reading-theme'),'night','Reading theme should persist after reload');
  assert.deepEqual(errors,[],'Browser JS errors');
  console.log('Chromium mobile smoke test passed');
 } finally {await browser.close()}
