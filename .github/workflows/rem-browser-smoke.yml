@@ -8,6 +8,9 @@ on:
       - 'rem-candidata.html'
       - '.github/workflows/rem-browser-smoke.yml'
   workflow_dispatch:
+concurrency:
+  group: rem-browser-smoke-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   browser:
     runs-on: ubuntu-latest
