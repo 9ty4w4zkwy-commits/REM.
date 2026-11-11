@@ -34,6 +34,14 @@ jobs:
           node lab/tests/capture-approved-reference.mjs
       - name: Build independent candidate preview package
         run: python3 lab/tests/build-candidate.py
+      - name: Verify standalone candidate package in Chrome
+        run: |
+          cd lab/dist/rem-candidate
+          python3 -m http.server 8766 --bind 127.0.0.1 > /tmp/rem-preview-http.log 2>&1 &
+          cd ../../..
+          for i in $(seq 1 30); do if curl -fsS http://127.0.0.1:8766/rem-candidata.html >/dev/null; then break; fi; sleep 1; done
+          curl -fsS http://127.0.0.1:8766/lab/content/book_montecristo.json >/dev/null
+          REM_BASE_URL=http://127.0.0.1:8766 node lab/tests/browser-candidate.mjs
       - name: Upload isolated candidate preview
         uses: actions/upload-artifact@v4
         with:
