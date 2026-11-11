@@ -36,3 +36,6 @@ html[data-reading-theme="night"] .reading-surface .status{color:#b9c2cb}
 html[data-reading-theme="sepia"] .reading-surface{background:#e9dbc0;color:#48372a}
 html[data-reading-theme="sepia"] .reading-surface #chapterText.reader{color:#48372a}
 html[data-reading-theme="sepia"] .reading-surface .status{color:#6b5845}
+
+.reader-navigation{display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;margin-top:22px;padding-top:18px;border-top:1px solid currentColor}
+.reader-navigation button{flex:1 1 180px}
