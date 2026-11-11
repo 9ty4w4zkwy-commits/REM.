@@ -30,6 +30,8 @@ try {
  await page.getByRole('button',{name:'Apri libro'}).first().click();
  assert.equal(await page.locator('#chapter').inputValue(),chosen,'Chapter progress should survive reload');
  await page.locator('#goLibrary').click();
+ assert.match(await page.locator('#historySummary').innerText(),/1 libro iniziato/);
+ assert.equal(await page.locator('#resetReading').isDisabled(),false);
  await page.getByRole('button',{name:'Apri libro'}).last().click();
  await page.locator('#chapterText').waitFor();
  assert.ok((await page.locator('#chapterText').innerText()).length>1000,'Montecristo text should be loaded');
