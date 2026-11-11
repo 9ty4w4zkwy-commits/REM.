@@ -27,3 +27,12 @@ button:active:not(:disabled){transform:translateY(1px)}
 .reading-surface .status{color:#62676c}
 .reading-surface #chapterText.reader{color:#25282a}
 @media(max-width:480px){#books{grid-template-columns:1fr}#books .book{min-height:175px}.reading-surface{padding:22px}}
+
+/* Persisted reader customization: scoped to the reading surface. */
+.reading-surface #chapterText.reader{font-size:var(--reader-font-size,1.18rem)}
+html[data-reading-theme="night"] .reading-surface{background:#18212b;color:#e9e5dc}
+html[data-reading-theme="night"] .reading-surface #chapterText.reader{color:#e9e5dc}
+html[data-reading-theme="night"] .reading-surface .status{color:#b9c2cb}
+html[data-reading-theme="sepia"] .reading-surface{background:#e9dbc0;color:#48372a}
+html[data-reading-theme="sepia"] .reading-surface #chapterText.reader{color:#48372a}
+html[data-reading-theme="sepia"] .reading-surface .status{color:#6b5845}
