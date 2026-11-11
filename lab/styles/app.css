@@ -153,3 +153,18 @@ html[data-catalog="candidate"] #reader{min-width:0;max-width:100%}
 html[data-catalog="candidate"] #reader select{display:block;width:100%;max-width:100%;min-width:0;overflow:hidden;text-overflow:ellipsis}
 html[data-catalog="candidate"] #reader .panel,html[data-catalog="candidate"] #reader .reading-surface{min-width:0;max-width:100%;overflow-wrap:anywhere}
 html[data-catalog="candidate"] #reader .tabs>*{min-width:0;max-width:100%}
+
+/* REM 5.6 editorial Home sections, limited to the candidate branch. */
+html[data-catalog="candidate"] .home-shelves{margin:34px 0 46px;display:grid;gap:20px}
+html[data-catalog="candidate"] .home-shelf{border-top:1px solid #ffffff26;padding:24px 0 6px}
+html[data-catalog="candidate"] .home-shelf>h3{font-family:Georgia,serif;font-weight:500;font-size:clamp(1.7rem,7vw,2.3rem);line-height:1.15;margin:9px 0 20px}
+html[data-catalog="candidate"] .home-free-book{display:grid;grid-template-columns:minmax(0,120px) minmax(0,1fr);gap:19px;align-items:center;background:#15283b;border:1px solid #ffffff16;border-radius:19px;padding:17px}
+html[data-catalog="candidate"] .home-free-cover{min-height:170px;display:flex;flex-direction:column;justify-content:space-between;gap:10px;padding:15px 12px;background:linear-gradient(150deg,#78654b,#263e4d 58%,#112232);border:1px solid #c5b48b66;box-shadow:4px 8px 17px #0005;color:#f9ecd3}
+html[data-catalog="candidate"] .home-free-cover span{font-size:.54rem;letter-spacing:.12em}
+html[data-catalog="candidate"] .home-free-cover strong{font:600 1.1rem/1.18 Georgia,serif;overflow-wrap:anywhere}
+html[data-catalog="candidate"] .home-free-copy{min-width:0}
+html[data-catalog="candidate"] .home-free-copy h4{font:500 1.35rem/1.18 Georgia,serif;margin:9px 0}
+html[data-catalog="candidate"] .home-free-copy button{margin-top:12px}
+html[data-catalog="candidate"] .home-library-callout{padding:25px 22px 29px;border:1px solid #ffffff20;border-radius:21px;background:linear-gradient(125deg,#19334a,#102335)}
+html[data-catalog="candidate"] .home-library-callout .muted{max-width:30ch}
+@media(max-width:360px){html[data-catalog="candidate"] .home-free-book{grid-template-columns:100px minmax(0,1fr);gap:12px;padding:12px}html[data-catalog="candidate"] .home-free-cover{min-height:156px;padding:10px}html[data-catalog="candidate"] .home-free-copy h4{font-size:1.15rem}}
