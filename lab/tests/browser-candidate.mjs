@@ -5,7 +5,11 @@ try{
  const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('http://127.0.0.1:8765/rem-candidata.html',{waitUntil:'networkidle'});
- if(await page.locator('#welcome').isVisible())await page.locator('#welcomeStart').click();
+ assert.equal(await page.locator('#profileOnboarding').isVisible(),true,'Original profile onboarding must appear first');
+ await page.getByRole('button',{name:'Iniziamo'}).click();
+ assert.match(await page.locator('#profileQuestion h2').innerText(),/perdere la cognizione del tempo/);
+ await page.locator('#profileSkip').click();
+ assert.equal(await page.locator('#profileOnboarding').isVisible(),false,'Skipping onboarding should close it');
  assert.equal(await page.locator('#home').isVisible(),true,'Candidate should land on Home');
  assert.match(await page.locator('#homeBookTitle').innerText(),/Montecristo/);
  await page.locator('#homeLibrary').click();
@@ -26,6 +30,10 @@ try{
  assert.equal(await page.locator('#homeResume').isVisible(),true,'Home must offer resume after reading starts');
  await page.locator('#homeResume').click();
  assert.equal(await page.locator('#reader').isVisible(),true,'Home resume must open the reader');
+ await page.reload({waitUntil:'networkidle'});
+ assert.equal(await page.locator('#profileOnboarding').isVisible(),false,'Skipped onboarding must not repeat');
+ await page.locator('#profileEdit').click();
+ assert.equal(await page.locator('#profileOnboarding').isVisible(),true,'Profile answers must be editable');
  assert.deepEqual(errors,[],'No browser JavaScript errors');
  console.log('Montecristo-only candidate smoke test passed');
 }finally{await browser.close()}
