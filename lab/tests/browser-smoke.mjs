@@ -24,7 +24,7 @@ try {
  assert.equal(await page.locator('#chapterProgress').count(),1,'Reader should expose chapter progress');
  await page.locator('#chapterText').evaluate(el=>window.scrollTo(0,el.offsetTop+el.offsetHeight/2));
  await page.waitForTimeout(150);
- assert.ok(Number(await page.locator('#chapterProgress').inputValue())>0,'Reading progress should advance on scroll');
+ assert.ok(Number(await page.locator('#chapterProgress').evaluate(el=>el.value))>0,'Reading progress should advance on scroll');
  await page.evaluate(()=>window.scrollTo(0,0));
  const casaChapters=await page.locator('#chapter option').count();
  assert.ok(casaChapters>=2,'Casa should expose its original chapters');
