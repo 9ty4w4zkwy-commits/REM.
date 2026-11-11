@@ -42,6 +42,20 @@ jobs:
           for i in $(seq 1 30); do if curl -fsS http://127.0.0.1:8766/rem-candidata.html >/dev/null; then break; fi; sleep 1; done
           curl -fsS http://127.0.0.1:8766/lab/content/book_montecristo.json >/dev/null
           REM_BASE_URL=http://127.0.0.1:8766 node lab/tests/browser-candidate.mjs
+      - name: Build and test single-file candidate in Chrome
+        run: |
+          python3 lab/tests/build-single-html.py
+          cd lab/dist/rem-candidate-single
+          python3 -m http.server 8767 --bind 127.0.0.1 > /tmp/rem-single-http.log 2>&1 &
+          cd ../../..
+          for i in $(seq 1 30); do if curl -fsS http://127.0.0.1:8767/rem-candidata.html >/dev/null; then break; fi; sleep 1; done
+          REM_BASE_URL=http://127.0.0.1:8767 node lab/tests/browser-candidate.mjs
+      - name: Upload verified single-file candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: rem-candidate-single-html
+          path: lab/dist/rem-candidate-single/rem-candidata.html
+          if-no-files-found: error
       - name: Upload isolated candidate preview
         uses: actions/upload-artifact@v4
         with:
