@@ -34,6 +34,11 @@ try {
  assert.equal(await page.locator('#nextChapter').isDisabled(),true,'Last chapter has no next');
  await page.locator('#previousChapter').click();
  assert.equal(await page.locator('#chapter').evaluate(el=>el.selectedIndex),0,'Previous chapter button works');
+ await page.locator('#focusReading').click();
+ assert.equal(await page.locator('body').evaluate(el=>el.classList.contains('immersive-reading')),true,'Immersive mode should activate');
+ assert.equal(await page.locator('#focusReading').getAttribute('aria-pressed'),'true');
+ await page.locator('#focusReading').click();
+ assert.equal(await page.locator('body').evaluate(el=>el.classList.contains('immersive-reading')),false,'Immersive mode should exit');
  await page.locator('#readingNote').fill('Una nota sul primo capitolo');
  await page.locator('#chapter').selectOption({index:1});
  assert.equal(await page.locator('#readingNote').inputValue(),'','Notes must be scoped to chapter');
