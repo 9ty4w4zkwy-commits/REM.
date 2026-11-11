@@ -32,6 +32,14 @@ jobs:
           node lab/tests/browser-layout.mjs
           node lab/tests/capture-candidate.mjs
           node lab/tests/capture-approved-reference.mjs
+      - name: Build independent candidate preview package
+        run: python3 lab/tests/build-candidate.py
+      - name: Upload isolated candidate preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: rem-candidate-static-preview
+          path: lab/dist/rem-candidate/
+          if-no-files-found: error
       - name: Upload candidate screenshots for visual review
         if: always()
         uses: actions/upload-artifact@v4
