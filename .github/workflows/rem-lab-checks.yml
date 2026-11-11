@@ -16,7 +16,9 @@ jobs:
         with:
           node-version: '22'
       - name: Validate catalog
-        run: node lab/tests/validate-catalog.mjs
+        run: |
+          node lab/tests/validate-catalog.mjs
+          node lab/tests/validate-ui.mjs
       - name: Check JavaScript syntax
         run: |
           node --check lab/modules/app-core.js
