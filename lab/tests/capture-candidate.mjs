@@ -6,10 +6,10 @@ await mkdir(folder,{recursive:true});
 try{
  const page=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1,isMobile:true,hasTouch:true});
  await page.goto('http://127.0.0.1:8765/rem-candidata.html',{waitUntil:'networkidle'});
- await page.screenshot({path:folder+'/01-onboarding.png',fullPage:true});
+ await page.screenshot({path:folder+'/01-onboarding.png',fullPage:false});
  await page.getByRole('button',{name:'Iniziamo'}).click();
  for(let step=1;step<=4;step++){
-  await page.screenshot({path:folder+'/01-onboarding-step-'+step+'.png',fullPage:true});
+  await page.screenshot({path:folder+'/01-onboarding-step-'+step+'.png',fullPage:false});
   if(step<4){await page.locator('.profile-choice').first().click();await page.locator('.profile-actions .primary').click()}
  }
  await page.locator('#profileSkip').click();
