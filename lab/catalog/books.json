@@ -12,7 +12,11 @@
       ],
       "chaptersSource": "lab/content/book_casa-oltre-bosco.json",
       "contentStatus": "integrated",
-      "legacyContentId": "casa-oltre-bosco"
+      "legacyContentId": "casa-oltre-bosco",
+      "visual": {
+        "coverStyle": "forest",
+        "eyebrow": "ROMANZO"
+      }
     },
     {
       "id": "montecristo",
@@ -24,7 +28,11 @@
         "audio"
       ],
       "chaptersSource": "lab/content/book_montecristo.json",
-      "contentStatus": "integrated"
+      "contentStatus": "integrated",
+      "visual": {
+        "coverStyle": "classic",
+        "eyebrow": "CLASSICI"
+      }
     }
   ]
 }
