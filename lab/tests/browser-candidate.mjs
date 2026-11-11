@@ -11,6 +11,8 @@ try{
  assert.match(await page.locator('#books').innerText(),/Montecristo/);
  assert.doesNotMatch(await page.locator('#books').innerText(),/casa oltre il bosco/i);
  await page.getByRole('button',{name:'Apri libro'}).click();
+ assert.equal(await page.locator('#format option[value="audio"]').isDisabled(),true,'Unavailable audio must be disabled');
+ assert.equal(await page.locator('#format option[value="paper"]').isDisabled(),true,'Unavailable paper synchronization must be disabled');
  assert.ok((await page.locator('#chapterText').innerText()).length>1000,'Full original Montecristo text must load');
  assert.deepEqual(errors,[],'No browser JavaScript errors');
  console.log('Montecristo-only candidate smoke test passed');
