@@ -23,7 +23,7 @@ function runTimer(){clearInterval(state.timer);if(state.remaining<=0)return;stat
 $('timerStart').onclick=()=>{const minutes=Number($('minutes').value);if(!Number.isFinite(minutes)||minutes<=0)return notify('Durata Focus non valida');state.remaining=Math.round(minutes*60);runTimer();notify('Sessione Focus avviata')};
 $('timerPause').onclick=()=>{if(state.timer){tick();clearInterval(state.timer);state.timer=null;notify('Timer in pausa')}}; 
 $('timerReset').onclick=()=>{clearInterval(state.timer);state.timer=null;state.remaining=0;tick();notify('Timer azzerato')};
-try{const [b,c]=await Promise.all([fetch('./lab/catalog/books.json'),fetch('./lab/catalog/chapters.json')]);if(!b.ok||!c.ok)throw Error('Dati non disponibili');const bd=await b.json(),cd=await c.json();if(bd.schemaVersion!==1||cd.schemaVersion!==1||!Array.isArray(bd.books)||!Array.isArray(cd.chapters))throw Error('Schema dati non valido');const ids=new Set();for(const book of bd.books){if(!book||typeof book.id!=='string'||!book.id||typeof book.title!=='string'||!book.title||ids.has(book.id))throw Error('Catalogo: ID o titolo non valido');ids.add(book.id)}const chapterIds=new Set();for(const ch of cd.chapters){if(!ch||typeof ch.id!=='string'||!ch.id||chapterIds.has(ch.id)||!ids.has(ch.bookId)||typeof ch.text!=='string')throw Error('Capitoli: riferimento o contenuto non valido');chapterIds.add(ch.id)}state.books=bd.books;state.chapters=cd.chapters;
+try{const [b,c]=await Promise.all([fetch('./lab/catalog/books.json'),fetch('./lab/catalog/chapters.json')]);if(!b.ok||!c.ok)throw Error('Dati non disponibili');const bd=await b.json(),cd=await c.json();if(bd.schemaVersion!==1||cd.schemaVersion!==1||!Array.isArray(bd.books)||!Array.isArray(cd.chapters))throw Error('Schema dati non valido');const ids=new Set();for(const book of bd.books){if(!book||typeof book.id!=='string'||!book.id||typeof book.title!=='string'||!book.title||ids.has(book.id))throw Error('Catalogo: ID o titolo non valido');ids.add(book.id)}const chapterIds=new Set();for(const ch of cd.chapters){if(!ch||typeof ch.id!=='string'||!ch.id||chapterIds.has(ch.id)||!ids.has(ch.bookId)||typeof ch.text!=='string')throw Error('Capitoli: riferimento o contenuto non valido');chapterIds.add(ch.id)}state.books=bd.books;state.chapters=cd.chapters;const failedBooks=[];
 for(const book of state.books){
  if(book.contentStatus!=='integrated'||!book.chaptersSource?.startsWith('lab/content/'))continue;
  try{
@@ -41,7 +41,7 @@ for(const book of state.books){
   for(const [number,segments] of grouped){
    state.chapters.push({id:book.id+'-legacy-'+number,bookId:book.id,title:segments[0].chapterTitle||'Capitolo '+number,text:segments.map(segment=>segment.text||segment.testo||'').join('\n\n'),source:'Testo estratto dalla versione REM originale'});
   }
- }catch(error){console.warn('Contenuto estratto non caricato:',book.id,error)}
+ }catch(error){state.chapters=state.chapters.filter(ch=>ch.bookId!==book.id);failedBooks.push(book.title);console.error('Contenuto estratto non caricato:',book.id,error)}
 }
-library();notify('Demo modulare caricata: non sostituisce REM 5.6')}catch(e){notify('Errore: '+e.message)}
+library();notify(failedBooks.length?'Contenuti non disponibili: '+failedBooks.join(', '):'Demo modulare caricata: non sostituisce REM 5.6')}catch(e){notify('Errore: '+e.message)}
 })();
