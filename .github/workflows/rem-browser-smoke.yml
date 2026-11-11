@@ -20,10 +20,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Install Playwright Chromium
-        run: |
-          npm install --no-save playwright
-          npx playwright install --with-deps chromium
+      - name: Install Playwright (use runner Chrome)
+        run: npm install --no-save playwright
       - name: Start static server and test mobile viewport
         run: |
           python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/rem-http.log 2>&1 &
