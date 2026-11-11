@@ -1,0 +1,26 @@
+name: REM browser smoke
+on:
+  push:
+    branches: [rem-lab-modularizzazione-v1]
+    paths:
+      - 'lab/**'
+      - 'rem-modulare-demo.html'
+      - '.github/workflows/rem-browser-smoke.yml'
+  workflow_dispatch:
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Start static server and test mobile viewport
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/rem-http.log 2>&1 &
+          node lab/tests/browser-smoke.mjs
