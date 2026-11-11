@@ -31,8 +31,9 @@ window.fetch=(input,options)=>{
 };
 """
 html=html.replace('<link rel="stylesheet" href="./lab/styles/app.css">',"<style>"+css.replace("</style","<\\/style")+"</style>")
-html=html.replace('<script src="./lab/modules/app-core.js" defer></script>',"<script>"+shim+"\ndocument.addEventListener(\'DOMContentLoaded\',()=>{\n"+app.replace("</script","<\\/script")+"\n});</script>")
-html=html.replace('<script src="./lab/modules/onboarding.js" defer></script>',"<script>document.addEventListener(\'DOMContentLoaded\',()=>{\n"+onboarding.replace("</script","<\\/script")+"\n});</script>")
+# Onboarding must initialize before app-core because embedded fetch resolves immediately.
+html=html.replace('<script src="./lab/modules/app-core.js" defer></script>',"<script>"+shim+"\n"+onboarding.replace("</script","<\\/script")+"\n"+app.replace("</script","<\\/script")+"</script>")
+html=html.replace('<script src="./lab/modules/onboarding.js" defer></script>',"")
 assert not re.search(r'<(?:script|link)[^>]+(?:src|href)=',html)
 dest=root/"lab/dist/rem-candidate-single"
 dest.mkdir(parents=True,exist_ok=True)
