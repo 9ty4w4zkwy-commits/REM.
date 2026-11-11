@@ -1,0 +1,21 @@
+/* Standalone data-driven REM proof of architecture; not the approved REM 5.6. */
+(async function(){
+'use strict';
+const $=id=>document.getElementById(id),state={books:[],chapters:[],selected:null,format:'ebook',timer:null,remaining:0};
+const key='rem-modular-demo-v1';let progress={};try{progress=JSON.parse(localStorage.getItem(key)||'{}')}catch{}
+const save=()=>{try{localStorage.setItem(key,JSON.stringify(progress))}catch{}};
+const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const notify=s=>{$('status').textContent=s};
+const show=id=>{for(const x of ['library','reader','settings'])$(x).classList.toggle('hidden',x!==id)};
+const bookChapters=id=>state.chapters.filter(c=>c.bookId===id);
+function library(){show('library');$('books').replaceChildren();for(const book of state.books){const div=document.createElement('div');div.className='book';const h=document.createElement('h3');h.textContent=book.title;div.append(h);const p=document.createElement('p');p.className='muted';p.textContent=(book.author||'Autore non indicato')+' · '+bookChapters(book.id).length+' capitoli caricati';div.append(p);const b=document.createElement('button');b.className='primary';b.textContent='Apri libro';b.onclick=()=>openBook(book.id);div.append(b);$('books').append(div)}}
+function openBook(id){state.selected=state.books.find(b=>b.id===id);if(!state.selected)return;show('reader');$('bookTitle').textContent=state.selected.title;const chapters=bookChapters(id);$('chapter').replaceChildren();chapters.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=c.title;$('chapter').append(o)});const previous=progress[id]||{};if(chapters.some(c=>c.id===previous.chapter))$('chapter').value=previous.chapter;state.format=previous.format||'ebook';$('format').value=state.format;renderChapter()}
+function renderChapter(){const id=state.selected?.id,c=state.chapters.find(c=>c.id===$('chapter').value);if(!id||!c)return;state.format=$('format').value;progress[id]={chapter:c.id,format:state.format};save();$('chapterTitle').textContent=c.title;$('chapterText').textContent=state.format==='ebook'?c.text:state.format==='audio'?'Traccia audio non disponibile per questo capitolo. Nessun audio simulato.':'Per il cartaceo, la sincronizzazione della posizione richiederà una mappatura tra pagine ed episodi.';$('chapterText').classList.toggle('reader',state.format==='ebook');$('source').textContent=c.source||'';$('audio').classList.toggle('hidden',state.format!=='audio');$('audio').replaceChildren();if(state.format==='audio'&&c.audioUrl){const a=document.createElement('audio');a.controls=true;a.src=c.audioUrl;$('audio').append(a)}}
+$('chapter').onchange=renderChapter;$('format').onchange=renderChapter;$('goLibrary').onclick=library;$('goSettings').onclick=()=>show('settings');$('goBack').onclick=library;
+$('theme').onchange=()=>{document.documentElement.style.setProperty('--accent',$('theme').value)};
+$('timerStart').onclick=()=>{clearInterval(state.timer);state.remaining=Number($('minutes').value)*60;tick();state.timer=setInterval(()=>{state.remaining--;tick();if(state.remaining<=0){clearInterval(state.timer);state.timer=null;notify('Sessione Focus conclusa')}},1000)};
+$('timerPause').onclick=()=>{clearInterval(state.timer);state.timer=null;notify('Timer in pausa')};
+$('timerReset').onclick=()=>{clearInterval(state.timer);state.timer=null;state.remaining=0;tick()};
+function tick(){$('clock').textContent=String(Math.floor(state.remaining/60)).padStart(2,'0')+':'+String(state.remaining%60).padStart(2,'0')}
+try{const [b,c]=await Promise.all([fetch('./lab/catalog/books.json'),fetch('./lab/catalog/chapters.json')]);if(!b.ok||!c.ok)throw Error('Dati non disponibili');const bd=await b.json(),cd=await c.json();if(bd.schemaVersion!==1||cd.schemaVersion!==1||!Array.isArray(bd.books)||!Array.isArray(cd.chapters))throw Error('Schema dati non valido');state.books=bd.books;state.chapters=cd.chapters;library();notify('Demo modulare caricata: non sostituisce REM 5.6')}catch(e){notify('Errore: '+e.message)}
+})();
