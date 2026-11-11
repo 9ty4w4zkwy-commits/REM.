@@ -32,6 +32,10 @@ try {
  await page.locator('#goLibrary').click();
  assert.match(await page.locator('#historySummary').innerText(),/1 libro iniziato/);
  assert.equal(await page.locator('#resetReading').isDisabled(),false);
+ assert.equal(await page.locator('.history-resume').count(),1,'One started book should be resumable');
+ await page.locator('.history-resume').click();
+ assert.equal(await page.locator('#chapter').inputValue(),chosen,'History resume should open saved chapter');
+ await page.locator('#goLibrary').click();
  await page.getByRole('button',{name:'Apri libro'}).last().click();
  await page.locator('#chapterText').waitFor();
  assert.ok((await page.locator('#chapterText').innerText()).length>1000,'Montecristo text should be loaded');
