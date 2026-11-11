@@ -12,7 +12,11 @@ try{
  assert.equal(await page.locator('#profileOnboarding').isVisible(),false,'Skipping onboarding should close it');
  assert.equal(await page.locator('#home').isVisible(),true,'Candidate should land on Home');
  assert.match(await page.locator('#homeBookTitle').innerText(),/Montecristo/);
- await page.locator('#homeLibrary').click();
+ assert.match(await page.locator('#homeFreeTitle').innerText(),/Montecristo/,'Free-reading shelf must use catalog data');
+ await page.locator('#homeFreeExplore').click();
+ assert.equal(await page.locator('#bookDetail').isVisible(),true,'Free-reading shelf must open book detail');
+ await page.locator('#detailBack').click();
+ await page.locator('#homeShelfLibrary').click();
  await page.getByRole('button',{name:'Apri libro'}).first().waitFor();
  assert.equal(await page.locator('.book').count(),1,'Candidate must have one book');
  assert.match(await page.locator('#books').innerText(),/Montecristo/);
