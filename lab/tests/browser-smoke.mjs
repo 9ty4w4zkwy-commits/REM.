@@ -9,6 +9,11 @@ try {
  await page.getByRole('button',{name:'Apri libro'}).first().waitFor();
  const buttons=page.getByRole('button',{name:'Apri libro'});
  assert.equal(await buttons.count(),2,'Both extracted books should be available');
+ await page.locator('#bookSearch').fill('montecristo');
+ assert.equal(await page.getByRole('button',{name:'Apri libro'}).count(),1,'Search should filter books');
+ await page.locator('#bookSearch').fill('nessun risultato possibile');
+ assert.match(await page.locator('#books').innerText(),/Nessun libro trovato/);
+ await page.locator('#bookSearch').fill('');
  await buttons.first().click();
  assert.ok((await page.locator('#chapterText').innerText()).length>1000,'Casa text should be loaded');
  const casaChapters=await page.locator('#chapter option').count();
